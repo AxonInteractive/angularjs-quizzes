@@ -1,0 +1,36 @@
+{
+  "name": "axon-angularjs-quizzes",
+  "version": "0.0.1",
+  "description": "A collection of angular utilities for creating pretests, posttests and comparative scorecards.",
+  "contributors": [
+    {
+      "name": "Axon Interactive",
+      "email": "theteam@axoninteractive.ca"
+    },
+    {
+      "name": "Jeff Rose",
+      "email": "jrose0@gmail.com"
+    },
+    {
+      "name": "James Zinger",
+      "email": "dev@jameszinger.com"
+    }
+  ],
+  "homepage": "https://github.com/AxonInteractive/angularjs-quizzes",
+  "license": "MIT",
+  "main": "build/axon-angularjs-quizzes.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AxonInteractive/angularjs-quizzes.git"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt"               : "^0.4.5",
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-cssmin": "^0.12.1",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-contrib-uglify": "^0.7.0",
+    "grunt-contrib-watch" : "^0.6.1"
+  },
+  "scripts": {}
+}
