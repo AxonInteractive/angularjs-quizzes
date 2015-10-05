@@ -1,13 +1,67 @@
-# PEIR Client
+# AngularJS Quizzes Module
 
-## Installation
+Written by Jeff Rose and James Zinger of Axon Interactive
 
-Run the command 'npm deploy' at the terminal (inside this folder).
+## Description
 
-This should result in a series of dependency packages being install via the npm package manager, followed by a series of dependency packages being installed from the bower package manager. Lastly, bower any packages that require a build process be run will be built automatically.
+This AngularJS module contains a collection of directives, filters, services and views/controllers for building pretests, posttests and comparative scorecards.
+
+Contains helpful stuff including:
+
+### Directives
+
+#### directive 
+
+TODO
+
+### Filters
+
+#### filter 
+
+TODO
+
+### Services
+
+#### service 
+
+TODO
 
 ## Usage
 
-The PEIR Client consists of static files hosted by the PEIR Server. For a production site, the PEIR Server should be configured to use 'client/production' as its 'wwwRoot'. This will use minified and optimized production copies of all PEIR Client files to reduce bandwidth consumption and load times for users.
+This module is available from the Bower package registry. Install it with the following command:
 
-If debugging the site, you may with to set the PEIR Server's wwwRoot to 'client/build' to use non-minified files.
+```bash
+bower install axon-angularjs-quizzes
+```
+
+Once installed, simply point your build process to 
+
+`<bower_components>/axon-quizzes-utilities/build/axon-angularjs-quizzes.js` 
+
+and
+
+`<bower_components>/axon-quizzes-utilities/build/axon-angularjs-quizzes.css`.
+
+TODO
+
+## Dependencies
+
+### Angular Progress Arc
+
+TODO
+
+### Axon AngularJS Utilities
+
+TODO
+
+### Font Awesome
+
+TODO
+
+### UI Bootstrap (ui.bootstrap) 
+
+Provides directives and services that are used to integrate Bootstrap components more directly with AngularJS applications. See http://angular-ui.github.io/bootstrap/
+   
+### UI Router (ui.router)
+
+Replaces the standard AngularJS router with one that uses a state machine system supporting nested routing and more complex routing situations. See http://angular-ui.github.io/ui-router/
