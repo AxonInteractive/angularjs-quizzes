@@ -20,26 +20,12 @@
   'use strict';
 
   // Define the module and its dependencies ///////////////////////////////////////////////////////
-  var app = angular.module( 'peir-client', [
+  angular.module( 'axon-quizzes', [
     'angular-progress-arc', 
     'axon-utilities',
     'ngSanitize',
     'ui.bootstrap',
     'ui.router'
-  ] );
-
-
-  // Default progress-arc appearance //////////////////////////////////////////////////////////////
-  app.config( [
-    'progressArcDefaultsProvider',
-    function ( progressArcDefaultsProvider ) {
-
-      progressArcDefaultsProvider
-        .setDefault( 'background', '#EEE' )
-        .setDefault( 'counterClockwise', false )
-        .setDefault( 'size', 90 );
-
-    }
   ] );
 
 } )();
