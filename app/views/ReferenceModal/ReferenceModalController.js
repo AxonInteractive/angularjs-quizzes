@@ -2,7 +2,7 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  var app = angular.module( 'axon-angularjs-quizzes' );
 
   app.controller( 'ReferenceModalController', [
     '$scope', '$modalInstance', '$modalArgs', '$window', 

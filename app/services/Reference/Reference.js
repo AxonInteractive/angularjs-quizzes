@@ -2,22 +2,34 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .factory( 'Reference', [  
 
-  app.factory( 'Reference', [ function () {
+      function () {
 
-      return function Reference( referenceKey, nameStr, descriptionStr, url ) {
+        return function Reference( referenceKey, nameStr, descriptionStr, url ) {
 
-        return {
-          key:         referenceKey   || '',
-          name:        nameStr        || '',
-          description: descriptionStr || '',
-          url:         url            || ''
+          return {
+
+            // The reference's own key in the referernces map.
+            key: referenceKey || '',
+
+            // A name that the reference will be referred to as in-text.
+            name:  nameStr || '',
+
+            // The complete citation as is will appear in footnotes/endnotes.
+            description: descriptionStr || '',
+
+            // A url to the full text of the reference for download.
+            url: url || ''
+
+          };
+
         };
 
-      };
-
-    }
-  ] );
+      }
+      
+    ] );
 
 } )();

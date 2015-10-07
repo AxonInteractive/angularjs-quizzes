@@ -20,10 +20,9 @@
   'use strict';
 
   // Define the module and its dependencies ///////////////////////////////////////////////////////
-  angular.module( 'axon-quizzes', [
+  angular.module( 'axon-angularjs-quizzes', [
     'angular-progress-arc', 
-    'axon-utilities',
-    'ngSanitize',
+    'axon-angularjs-utilities',
     'ui.bootstrap',
     'ui.router'
   ] );

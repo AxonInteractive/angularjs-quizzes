@@ -2,11 +2,11 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  var app = angular.module( 'axon-angularjs-quizzes' );
 
   app.controller( 'KTPlanEditModalController', [
-    '$scope', '$state', '$modalInstance', '$modalArgs', '$log', '$sanitize',
-    function ( $scope, $state, $modalInstance, $modalArgs, $log, $sanitize ) {
+    '$scope', '$state', '$modalInstance', '$modalArgs', 
+    function ( $scope, $state, $modalInstance, $modalArgs ) {
 
       /////////////////////
       // Event Handlers //

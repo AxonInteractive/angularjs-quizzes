@@ -2,7 +2,7 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  var app = angular.module( 'axon-angularjs-quizzes' );
 
   app.directive( 'quizQuestion', [
     function () {
@@ -10,16 +10,13 @@
       return {
 
         scope: {
-          'question': '=question'
+          'question': '='
         },
         restrict: 'AE',
         templateUrl: 'directives/quizQuestion/quizQuestion.html',
         link: function ( $scope, $elem, $attrs ) {
 
-          // Directive code goes here
-          // See http://www.sitepoint.com/practical-guide-angularjs-directives-part-two/
-
-          // Read in quiz type as attr (pretest, posttest or questionnaire)
+          // Nothing to do here.
 
        }
 

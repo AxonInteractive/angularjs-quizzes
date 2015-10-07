@@ -24,12 +24,12 @@
     "url": "https://github.com/AxonInteractive/angularjs-quizzes.git"
   },
   "dependencies": {
-    "angular"                   : "1.3.13",
-    "angular-ui-bootstrap-bower": "0.12.0",
-    "angular-ui-router"         : "0.2.13",
-    "bootstrap-css-only"        : "3.3.2",
-    "font-awesome"              : "4.3.0",
-    "axon-angularjs-utilities"  : "^0.0.7"
+    "angular"                   : "^1.4.7",
+    "angular-ui-bootstrap-bower": "^0.13.4",
+    "angular-ui-router"         : "^0.2.15",
+    "bootstrap-css-only"        : "^3.3.5",
+    "font-awesome"              : "^4.4.0",
+    "axon-angularjs-utilities"  : "^0.0.9"
   },
   "devDependencies": {},
   "ignore": [

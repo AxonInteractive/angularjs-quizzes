@@ -1,0 +1,10 @@
+<div class="axon-error-message">
+  <div class="axon-error-border well well-lg">
+    <h2 ng-if="mergedPhrasing.title">{{ mergedPhrasing.title }}</h2>
+    <p ng-if="explanation" compile="explanation"></p>
+    <p ng-if="supportInvitation" compile="supportInvitation"></p>
+    <a ng-if="phrasing.error" class="axon-error-hidden-toggle axon-error-text" ng-click="onShowErrorClicked()">{{ showErrorText }}</a>
+    <p ng-if="phrasing.error" class="axon-error-hidden" collapse="!showError" compile="errorText"></p>
+    <div ng-transclude></div>
+  </div>
+</div>

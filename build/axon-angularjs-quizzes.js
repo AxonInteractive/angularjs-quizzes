@@ -1,4 +1,4 @@
-/*! axon-angularjs-quizzes - v0.0.1 - 2015-10-05 */
+/*! axon-angularjs-quizzes - v0.0.1 - 2015-10-07 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // app.js /////////////////////////////////////////////////////////////////////////////////////////
@@ -22,10 +22,9 @@
   'use strict';
 
   // Define the module and its dependencies ///////////////////////////////////////////////////////
-  angular.module( 'axon-quizzes', [
+  angular.module( 'axon-angularjs-quizzes', [
     'angular-progress-arc', 
-    'axon-utilities',
-    'ngSanitize',
+    'axon-angularjs-utilities',
     'ui.bootstrap',
     'ui.router'
   ] );
@@ -35,39 +34,27 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .directive( 'quiz', [ 
+      function () {
 
-  app.directive( 'quiz', [ '$injector',
-    function ( $injector ) {
+        return {
 
-      return {
+          scope: {
+            'source': '='
+          },
+          restrict: 'AE',
+          templateUrl: 'directives/quiz/quiz.html',
+          link: function ( $scope, $elem, $attrs ) {
 
-        scope: {
-          'source': '@source'
-        },
-        restrict: 'AE',
-        templateUrl: 'directives/quiz/quiz.html',
-        link: function ( $scope, $elem, $attrs ) {
+            // Nothing to do here.
 
-          // Directive code goes here
-          // See http://www.sitepoint.com/practical-guide-angularjs-directives-part-two/
-
-          // Read in quiz type as attr (pretest, posttest or questionnaire)
-
-          var data = $injector.get( $scope.source );
-
-          $scope.data = data;
-
-          $scope.questions = data.questions;
-
-          if ( typeof $scope.quizVars !== 'object' ) {
-            $scope.quizVars = {};
           }
-        }
 
-      };
+        };
 
-  } ] );
+    } ] );
 
 } )();
 
@@ -75,40 +62,23 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  var app = angular.module( 'axon-angularjs-quizzes' );
 
   app.directive( 'quizAnswer', [
-    '$sce', '$modal', '$peirReferencesData', 
-    function ( $sce, $modal, $peirReferencesData ) {
+    '$sce', 
+    function ( $sce ) {
 
       return {
 
         scope: {
-          question: '=question'
+          question: '='
         },
         restrict: 'AE',
         templateUrl: 'directives/quizAnswer/quizAnswer.html',
         link: function ( $scope, $elem, $attrs ) {
 
-          /////////////////////
-          // Event Handlers //
-          ///////////////////
-
-          $scope.onReferenceClicked = function ( event, referenceKey ) {
-            event.preventDefault();
-            $peirReferencesData.showReferenceModal( referenceKey );
-          };
-
-          /////////////////////
-          // Initialization //
-          ///////////////////
-          
-          ( function init () {
-
-            // Sanitize the commentary to produce working HTML.
-            $scope.sanitizedCommentary = $sce.trustAsHtml( $scope.question.commentary );
-
-          } )();
+          // Sanitize the commentary to produce working HTML.
+          $scope.sanitizedCommentary = $sce.trustAsHtml( $scope.question.commentary );
 
         }
 
@@ -122,7 +92,7 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  var app = angular.module( 'axon-angularjs-quizzes' );
 
   app.directive( 'quizQuestion', [
     function () {
@@ -130,16 +100,13 @@
       return {
 
         scope: {
-          'question': '=question'
+          'question': '='
         },
         restrict: 'AE',
         templateUrl: 'directives/quizQuestion/quizQuestion.html',
         link: function ( $scope, $elem, $attrs ) {
 
-          // Directive code goes here
-          // See http://www.sitepoint.com/practical-guide-angularjs-directives-part-two/
-
-          // Read in quiz type as attr (pretest, posttest or questionnaire)
+          // Nothing to do here.
 
        }
 
@@ -153,30 +120,21 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  var app = angular.module( 'axon-angularjs-quizzes' );
 
-  app.directive( 'quizResults', [ '$injector',
-    function ( $injector ) {
+  app.directive( 'quizResults', [ 
+    function () {
 
       return {
 
         scope: {
-          'source': '@source'
+          'source': '='
         },
         restrict: 'AE',
         templateUrl: 'directives/quizResults/quizResults.html',
         link: function ( $scope, $elem, $attrs ) {
 
-          // Directive code goes here
-          // See http://www.sitepoint.com/practical-guide-angularjs-directives-part-two/
-
-          // Read in quiz type as attr (pretest, posttest or questionnaire)
-
-          var data = $injector.get( $scope.source );
-
-          $scope.data = data;
-
-          $scope.questions = data.questions;
+          // Nothing to do here.
 
         }
 
@@ -190,17 +148,18 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  var app = angular.module( 'axon-angularjs-quizzes' );
 
-  app.directive( 'quizScorecard', [ '$injector', 'QuizScorecard',
-    function ( $injector, QuizScorecard ) {
+  app.directive( 'quizScorecard', [ 
+    'Scorecard',
+    function ( Scorecard ) {
 
       return {
 
         scope: {
-          "beforeSource": "@",
-          "afterSource": "@",
-          "modulesSource": "@"
+          "beforeSource": "=",
+          "afterSource": "=",
+          "modulesSource": "="
         },
         restrict: 'AE',
         templateUrl: 'directives/quizScorecard/quizScorecard.html',
@@ -215,7 +174,7 @@
           // angular-progress-arc to behave, since internall it CALLS the complete attribute passed
           // to it as a function, and I'm grasping at straws as to how to make that work nicely.
           $scope.getFn = function ( src ) {
-            console.log( src );
+            //console.log( src );
             return function () {
               return src;
             };
@@ -225,21 +184,17 @@
           // Initialization //
           ///////////////////
 
-          var $beforeData = $injector.get( $scope.beforeSource );
-          var $moduleData = $injector.get( $scope.modulesSource );
-          var $afterData;
+          $scope.isSingleSource = !$scope.afterSource;
 
-          if ( typeof $scope.afterSource === 'string' ) {
-            $afterData = $injector.get( $scope.afterSource );
-            $scope.isSingleSource = false;
-          }
-          else {
-            $scope.isSIngleSource = true;
-          }
-
-          var scorecard = new QuizScorecard( $moduleData, $beforeData, $afterData );
-
+          var scorecard = Scorecard( 
+            $scope.modulesSource, 
+            $scope.beforeSource, 
+            $scope.afterSource 
+          );
           angular.extend( $scope, scorecard );
+
+          console.log( scorecard.modules );
+          console.log( scorecard.modules.posttest );
 
         }
 
@@ -253,9 +208,10 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  var app = angular.module( 'axon-angularjs-quizzes' );
 
-  app.directive( 'quizScorecardQuestion', [ '$modal',
+  app.directive( 'quizScorecardQuestion', [ 
+    '$modal',
     function ( $modal ) {
 
       return {
@@ -267,7 +223,7 @@
         templateUrl: 'directives/quizScorecardQuestion/quizScorecardQuestion.html',
         link: function ( $scope, $elem, $attrs ) {
 
-          $scope.onButtonClicked = function() {
+          $scope.onButtonClicked = function () {
             $modal.open( {
                 templateUrl: 'views/__Modals/QuizAnswerModal/QuizAnswerModal.html',
                 controller: 'QuizAnswerModalController',
@@ -293,160 +249,27 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .factory( 'Action', [
 
-  app.factory( 'Quiz', [
+      function () {
 
-    function () {
+        return function Action( state, label ) {
 
-      return function Quiz( properties ) {
+          return {
 
-        // The name to be presented for this quiz.
-        properties.name = ( typeof properties.name === 'undefined' ) ? "Quiz" : properties.name;
+            // The router state this action should navigate to.
+            state: state || '',
 
-        // Any special instructions that should be presented at the start of this quiz.
-        properties.instructions = ( typeof properties.instructions === 'undefined' ) ? "" : properties.instructions;
+            // The label to place upon the button that renders this action.
+            label: label || 'Next'
 
-        // The expected maximum score that can be obtained on this quiz.
-        properties.maxScore = ( typeof properties.maxScore === 'undefined' ) ? 0 : properties.maxScore;
+          };
 
-        // The student's score on the quiz. Computed by calling grade().
-        properties.score = ( typeof properties.score === 'undefined' ) ? null : properties.score;
-
-        // The academic references that this quiz should attribute.
-        properties.references = ( typeof properties.references === 'undefined' ) ? [] : properties.references;
-
-        // The list of questions that make up the quiz.
-        properties.questions = ( typeof properties.questions === 'undefined' ) ? [] : properties.questions;
-
-        properties.competencies = ( function() {
-          var competencies = {};
-
-          var questions = properties.questions;
-
-          var competency;
-
-          for ( var i = 0; questions.length; i += 1 ) {
-
-            var question = questions[ i ];
-
-            if ( typeof question === 'undefined' ) {
-              break;
-            }
-
-            competency = questions[ i ].competency;
-
-            if ( competency === null ) {
-              continue;
-            }
-
-            if( typeof competency.key !== 'string' ) {
-              continue;
-            }
-
-            if ( typeof competencies[ competency.key ] === 'undefined' ) {
-              competencies[ competency.key ] = [];
-            }
-
-            competencies[ competency.key ].push( questions[ i ] );
-          }
-
-          return competencies;
-
-        }() );
-
-        // Clear all answers and grading information from the quiz.
-        properties.clear = function () {
-          properties.score = null;
-          for ( var i = 0; i < properties.questions.length; i += 1 ) {
-            properties.questions[ i ].incomplete = false;
-            properties.questions[ i ].answer = null;
-            properties.questions[ i ].correct = null;
-          }
         };
 
-        // Check the answer of each question against the correct answer to grade each question, and
-        // compute the student's score by totaling all questions' values. Returns the student's
-        // score or null if the quiz shouldn't be graded.
-        properties.grade = function () {
-
-          if ( properties.maxScore <= 0 ) {
-            // If this quiz has an invalid max score, then it shouldn't be graded.
-            return null;
-          }
-
-          // Initialize the score as 0
-          properties.score = 0;
-
-          for ( var i = 0; i < properties.questions.length; i += 1 ) {
-
-           var question = properties.questions[ i ];
-
-           var correct = question.isCorrect();
-
-            // Add the question's value to the score if the student's answer was correct.
-            properties.score += ( correct ) ? question.value : 0;
-          }
-
-          return properties.score;
-        };
-
-        properties.getScoreFromAnswers = function( answers ) {
-
-          var score = 0;
-
-          for ( var i = 0; i < properties.questions.length; i += 1 ) {
-            var question = properties.questions[ i ];
-
-            var correct = question.isCorrectForAnswer( answers[ i ] );
-
-            score += ( correct ) ? question.value : 0;
-          }
-
-          return score;
-        };
-
-        properties.getUnansweredQuestions = function() {
-          var questions = [];
-
-          for ( var i = 0; i < properties.questions.length; i += 1 ) {
-            var question = properties.questions[ i ];
-
-            if ( !question.isAnswered() ) {
-              questions.push ( question );
-            }
-          }
-
-          return questions;
-        };
-
-        // This function can be used to get a flat array of answers by scraping the values from each
-        // question. This is typically used for output of a user's answers to a database.
-        properties.getAnswers = function () {
-          var answers = [];
-          for ( var i = 0; i < properties.questions.length; i += 1 ) {
-            answers.push( properties.questions[ i ].answer );
-          }
-          return answers;
-        };
-
-        // This function can be used to set the answer of each question by providing an array of
-        // answers that matches the number of questions in this quiz.
-        properties.setAnswers = function ( answersArray ) {
-          if ( answersArray.length !== properties.questions.length ) {
-            throw new Error( "The provided answers array is not the same size as the questions array!" );
-          }
-          for ( var i = 0; i < properties.questions.length; i += 1 ) {
-            properties.questions[ i ].answer = answersArray[ i ];
-          }
-        };
-
-        // Return the modified properties object.
-        return properties;
-
-      };
-
-  } ] );
+    } ] );
 
 } )();
 
@@ -454,21 +277,77 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .factory( 'Competency', [  
 
-  app.factory( 'QuizCompetencies', [
+      function () {
 
-    function () {
+        return function Competency( competencyKey, nameStr, descriptionStr, url ) {
 
-      return function QuizCompetencies( map ) {
+          return {
 
-        // Yeah, this is definitely overkill, but I wanted to have this here in case we need to add
-        // specialized behaviour later on.
-        return map;
+            // The competency's own key in the referernces map.
+            key: competencyKey || '',
 
-      };
+            // A name that the competency will be referred to as in-text.
+            name: nameStr || '',
 
-  } ] );
+            // A human-readable description of this competency.
+            description: descriptionStr || '',
+
+            // A url to the full text of the competency for download.
+            url: url || ''
+
+          };
+
+        };
+
+      }
+      
+    ] );
+
+} )();
+( function () {
+
+  'use strict';
+
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .factory( 'Module', [
+
+      function () {
+
+        return function Module( properties ) {
+
+          var defaults = {
+
+            // The name of the module in human-readable format.
+            name: '',
+
+            // The 1-indexed number of the module.
+            number: 0,
+
+            // The identifier used in code (typically in router states refrencing module pages.
+            key: '',
+
+            // A list of competencies this module relates to.
+            competencies: [],
+
+            // The list of pages that belong to this module.
+            pages: []
+
+          };
+
+          // Extend the defaults with the passed properties.
+          var extended = angular.extend( defaults, properties );
+
+          // Return the final Module object.
+          return extended;
+
+        };
+
+    } ] );
 
 } )();
 
@@ -476,175 +355,411 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .factory( 'Page', [
 
-  app.factory( 'QuizQuestion', [
+      function () {
 
-    function () {
+        return function Page( properties ) {
 
-      return function QuizQuestion( properties ) {
+          var defaults = {
 
-        // The ID number of the question, for administrative purposes.
-        properties.number = ( typeof properties.number === 'undefined' ) ? 0 : properties.number;
+            // A number to order this page within the module.
+            number: 0,
 
-        // The type of question this is from the following list:
-        // [
-        //   "text",         -- Short-Answer questions and potentially numeric answers expected to be
-        //                      an exact string match of the correct answer.
-        //   "choiceLiteral" -- True/False questions where the student picks one of
-        //                      several options from the choices array.
-        //   "choice"        -- Multiple choice questions where the student picks on of several
-        //                      several options from the choices array but is displayed in a literal
-        //                      form for results
-        //   ""
-        // ]
-        properties.type = ( typeof properties.type === 'undefined' ) ? "choice" : properties.type;
+            // A string identifying the type of content this page presents. There is no specific 
+            // list of types other than what your stie needs for its particular implementation.
+            type: '',
 
-        // The number of points this question contributes toward the student's score if they
-        // answer it correctly.
-        properties.value = ( typeof properties.value === 'undefined' ) ? 0 : properties.value;
+            // The name of the page in human-readable format.
+            name: '',
 
-        // The question text.
-        properties.text = ( typeof properties.text === 'undefined' ) ? "" : properties.text;
+            // The router state at which this page can be reached.
+            state: '',
 
-        // An array of potential answers that the student can pick from. If this is a
-        // text question, this should be a list of strings that represent potential correct
-        // responses to match the student's answer against.
-        properties.choices = ( typeof properties.choices === 'undefined' ) ? [] : properties.choices;
+            // If this page has non-text content that requires transcription for the hearing 
+            // impaired, this URL points to the transcript file that can be downloaded.
+            transcriptUrl: '',
 
-        // The array index of the correct choice within the list of choices above or a string
-        // that represents the correct answer (must be an exact match).
-        properties.correctAnswer = ( typeof properties.correctAnswer === 'undefined' ) ? -1 : properties.correctAnswer;
+            // An action for the button on this page defining the page/state to navigate to (next 
+            // and previous) and labels to put on these buttons to describe them.
+            actions: {
+              next: null,
+              prev: null
+            }
 
-        // The student's answer to this question. This will be set when a quiz is submitted by
-        // the student, using the setAnswers() function.
-        properties.answer = ( typeof properties.answer === 'undefined' ) ? null : properties.answer;
+          };
 
-        // Whether the student's answer to this question is correct or not.
-        properties.correct = ( typeof properties.correct === 'undefined' ) ? null : properties.correct;
+          // Extend the defaults with the passed properties.
+          var extended = angular.extend( defaults, properties );
 
-        // Text to be presented to the student after the quiz is completed that justifies the
-        // correct answer for the question and provides further background to aid understanding.
-        properties.commentary = ( typeof properties.commentary === 'undefined' ) ? "" : properties.commentary;
+          // Return the final ModulePage object.
+          return extended;
 
-        // The Core Competency with which this question is associated.
-        properties.competency = ( typeof properties.competency === 'undefined' ) ? null : properties.competency;
-
-        // The additional data to be stored inside of the question.
-        properties.additionalData = ( typeof properties.additionalData === 'undefined' ) ? null : properties.additionalData;
-
-        properties.getAnswer = function () {
-          // If the answer is falsey then return an empty string
-          if ( !properties.answer && properties.answer !== 0 ) {
-            return "No answer";
-          }
-          else if ( properties.isChoiceLiteral() ) {
-            return properties.choices[ properties.answer ];
-          }
-          else if ( properties.isChoice() ) {
-            // 65 is ASCII for 'A'
-            return String.fromCharCode( 65 + parseInt( properties.answer ) );
-          }
-          else {
-            return properties.answer;
-          }
         };
 
-        properties.getCorrectAnswer = function() {
-          //If the question type is a text then return the correct answer as is.
-          if ( properties.isChoiceLiteral() ) {
-            return properties.choices[ properties.correctAnswer ];
-          }
-          else if ( properties.isChoice() ) {
-            // 65 is ASCII for 'A'
-            return String.fromCharCode( 65 + parseInt( properties.correctAnswer ) );
-          }
-          else {
-            return properties.correctAnswer;
-          }
-        };
+    } ] );
 
-        properties.getChoice = function( index ) {
-          if ( properties.isChoiceLiteral() ) {
-            return properties.choices[ index ];
-          }
-          else if ( properties.isChoice() ) {
-            return String.fromCharCode( 65 + index );
-          }
-          else {
-            return index;
-          }
-        };
+} )();
 
-        properties.isCorrect = function () {
-          return properties.isCorrectForAnswer( properties.answer );
-        };
+( function () {
 
-        properties.isAnswered = function() {
-          return ( properties.answer !== null );
-        };
+  'use strict';
 
-        properties.isCorrectForAnswer = function ( answer ) {
-          var correctAnswer = null;
-          var correct = false;
-          var formattedAnswer = null;
-          switch ( properties.type ) {
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .factory( 'Question', [
 
-            case "text":
-              // Compare the student's answer to each of the possible choices, and consider the
-              // answer to be correct if any of them matches. Compare all strings as lower-case
-              // text and remove all whitespace to eliminate common sources of false-negatives.
-              formattedAnswer = answer.toString().toLowerCase().replace( " ", "" );
-              for ( var j = 0; j < properties.choices.length; j += 1 ) {
-                correctAnswer = properties.choices[ j ].toString().toLowerCase().replace( " ", "" );
-                if ( formattedAnswer === correctAnswer ) {
-                  correct = true;
+      function () {
+
+        return function Question( properties ) {
+
+          var defaults = {
+
+            // The ID number of the question, for administrative purposes.
+            number: 0,
+
+            // The type of question this is from the following list:
+            // [
+            //   "text",         -- Short-Answer questions and potentially numeric answers expected to be
+            //                      an exact string match of the correct answer.
+            //   "choiceLiteral" -- True/False questions where the student picks one of
+            //                      several options from the choices array.
+            //   "choice"        -- Multiple choice questions where the student picks on of several
+            //                      several options from the choices array but is displayed in a literal
+            //                      form for results
+            //   ""
+            // ]
+            type: 'choice',
+
+            // The number of points this question contributes toward the student's score if they
+            // answer it correctly.
+            value: 0,
+
+            // The question text.
+            text: '',
+
+            // An array of potential answers that the student can pick from. If this is a
+            // text question, this should be a list of strings that represent potential correct
+            // responses to match the student's answer against.
+            choices: [],
+
+            // The array index of the correct choice within the list of choices above or a string
+            // that represents the correct answer (must be an exact match).
+            correctAnswer: -1,
+
+            // The student's answer to this question. This will be set when a quiz is submitted by
+            // the student, using the setAnswers() function.
+            answer: null,
+
+            // Whether the student's answer to this question is correct or not.
+            correct: null,
+
+            // Text to be presented to the student after the quiz is completed that justifies the
+            // correct answer for the question and provides further background to aid understanding.
+            commentary: '',
+
+            // The Core Competency with which this question is associated.
+            competency: null,
+
+            // The additional data to be stored inside of the question.
+            additionalData: null,
+
+            getAnswer: function () {
+
+              // If the answer is falsey then return an empty string
+              if ( !this.answer && this.answer !== 0 ) {
+                return "No answer";
+              }
+              else if ( this.isChoiceLiteral() ) {
+                return this.choices[ this.answer ];
+              }
+              else if ( this.isChoice() ) {
+                // 65 is ASCII for 'A'
+                return String.fromCharCode( 65 + parseInt( this.answer ) );
+              }
+              else {
+                return this.answer;
+              }
+
+            },
+
+            getCorrectAnswer: function() {
+
+              //If the question type is a text then return the correct answer as is.
+              if ( this.isChoiceLiteral() ) {
+                return this.choices[ this.correctAnswer ];
+              }
+              else if ( this.isChoice() ) {
+                // 65 is ASCII for 'A'
+                return String.fromCharCode( 65 + parseInt( this.correctAnswer ) );
+              }
+              else {
+                return this.correctAnswer;
+              }
+
+            },
+
+            getChoice: function( index ) {
+
+              if ( this.isChoiceLiteral() ) {
+                return this.choices[ index ];
+              }
+              else if ( this.isChoice() ) {
+                return String.fromCharCode( 65 + index );
+              }
+              else {
+                return index;
+              }
+
+            },
+
+            isAnswered: function() {
+
+              return ( this.answer !== null );
+
+            },
+
+            isChoice: function() {
+
+              return ( this.type === 'choice' );
+
+            },
+
+            isCorrect: function () {
+
+              return this.isCorrectForAnswer( this.answer );
+
+            },
+
+            isCorrectForAnswer: function ( answer ) {
+
+              var correctAnswer = null;
+              var correct = false;
+              var formattedAnswer = null;
+              switch ( this.type ) {
+
+                case "text":
+                  // Compare the student's answer to each of the possible choices, and consider the
+                  // answer to be correct if any of them matches. Compare all strings as lower-case
+                  // text and remove all whitespace to eliminate common sources of false-negatives.
+                  formattedAnswer = answer.toString().toLowerCase().replace( " ", "" );
+                  for ( var j = 0; j < this.choices.length; j += 1 ) {
+                    correctAnswer = this.choices[ j ].toString().toLowerCase().replace( " ", "" );
+                    if ( formattedAnswer === correctAnswer ) {
+                      correct = true;
+                      break;
+                    }
+                  }
                   break;
+
+                case "choice":
+                  // Compare the student's answer to the correct answer as integers, because they both
+                  // refer to an index of the choices array. If they are equal, the student answered
+                  // with the correct answer.
+                  formattedAnswer = parseInt( answer );
+                  correctAnswer = parseInt( this.correctAnswer );
+                  correct = ( formattedAnswer === correctAnswer );
+                  break;
+
+
+                case "choiceLiteral":
+                  // Compare the student's answer to the correct answer as integers, because they both
+                  // refer to an index of the choices array. If they are equal, the student answered
+                  // with the correct answer.
+                  formattedAnswer = parseInt( answer );
+                  correctAnswer = parseInt( this.correctAnswer );
+                  correct = ( formattedAnswer === correctAnswer );
+                  break;
+
+              }
+
+              return correct;
+
+            },
+
+            isChoiceLiteral: function() {
+
+              return ( this.type === 'choiceLiteral' );
+
+            },
+
+            isText: function() {
+
+              return ( this.type === 'text' );
+
+            }
+
+          };
+
+          // Return the final QuizQuestion object.
+          return angular.extend( defaults, properties );
+          
+        };
+
+    } ] );
+
+} )();
+
+( function () {
+
+  'use strict';
+
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .factory( 'Quiz', [
+
+      function () {
+
+        return function Quiz( properties ) {
+
+          var defaults = {
+
+            // The name to be presented for this quiz.
+            name: '',
+
+            // Any special instructions that should be presented at the start of this quiz.
+            instructions: '',
+
+            // The expected maximum score that can be obtained on this quiz.
+            maxScore: 0,
+
+            // The student's score on the quiz. Computed by calling grade().
+            score: null,
+
+            // The academic references that this quiz should attribute.
+            references: [],
+
+            // The list of questions that make up the quiz.
+            questions: [],
+
+            // A list of competencies this quiz relates to.
+            competencies: [],
+
+            clear: function () {
+
+              // Set the score invalid.
+              this.score = null;
+
+              // Clear the scoring of each of the questions.
+              for ( var i = 0; i < this.questions.length; i += 1 ) {
+                this.questions[ i ].incomplete = false;
+                this.questions[ i ].answer = null;
+                this.questions[ i ].correct = null;
+              }
+
+            },
+
+            grade: function () {
+
+              // If this quiz has an invalid max score, then it shouldn't be graded.
+              if ( this.maxScore <= 0 ) {
+                return null;
+              }
+
+              // Initialize the score as 0.
+              this.score = 0;
+
+              // Add the question's value to the score if the student's answer was correct.
+              for ( var i = 0; i < this.questions.length; i += 1 ) {
+                var question = this.questions[ i ];
+                var correct = question.isCorrect();
+                this.score += ( correct ) ? question.value : 0;
+              }
+
+              return this.score;
+
+            },
+
+            getScoreFromAnswers: function( answers ) {
+
+              var score = 0;
+
+              for ( var i = 0; i < this.questions.length; i += 1 ) {
+                var question = this.questions[ i ];
+                var correct = question.isCorrectForAnswer( answers[ i ] );
+                score += ( correct ) ? question.value : 0;
+              }
+
+              return score;
+
+            },
+
+            getUnansweredQuestions: function() {
+
+              var questions = [];
+
+              for ( var i = 0; i < this.questions.length; i += 1 ) {
+                var question = this.questions[ i ];
+                if ( !question.isAnswered() ) {
+                  questions.push( question );
                 }
               }
-              break;
 
-            case "choice":
-              // Compare the student's answer to the correct answer as integers, because they both
-              // refer to an index of the choices array. If they are equal, the student answered
-              // with the correct answer.
-              formattedAnswer = parseInt( answer );
-              correctAnswer = parseInt( properties.correctAnswer );
-              correct = ( formattedAnswer === correctAnswer );
-              break;
+              return questions;
 
+            },
 
-            case "choiceLiteral":
-              // Compare the student's answer to the correct answer as integers, because they both
-              // refer to an index of the choices array. If they are equal, the student answered
-              // with the correct answer.
-              formattedAnswer = parseInt( answer );
-              correctAnswer = parseInt( properties.correctAnswer );
-              correct = ( formattedAnswer === correctAnswer );
+            // This function can be used to get a flat array of answers by scraping the values from each
+            // question. This is typically used for output of a user's answers to a database.
+            getAnswers: function () {
+
+              var answers = [];
+              for ( var i = 0; i < this.questions.length; i += 1 ) {
+                answers.push( this.questions[ i ].answer );
+              }
+
+              return answers;
+
+            },
+
+            // This function can be used to set the answer of each question by providing an array of
+            // answers that matches the number of questions in this quiz.
+            setAnswers: function ( answersArray ) {
+
+              if ( answersArray.length !== this.questions.length ) {
+                throw new Error( "The provided answers array is not the same size as the questions array!" );
+              }
+
+              for ( var i = 0; i < this.questions.length; i += 1 ) {
+                this.questions[ i ].answer = answersArray[ i ];
+              }
+
+            }
+
+          };
+
+          // Extend the defaults with the passed properties.
+          var extended = angular.extend( defaults, properties );
+
+          // Automatically construct the competencies from the questions.
+          for ( var i = 0; extended.questions.length; i += 1 ) {
+            
+            var question = extended.questions[ i ];
+            if ( typeof( question ) === 'undefined' ) {
               break;
+            }
+
+            var competency = extended.questions[ i ].competency;
+            if ( competency === null || typeof( competency.key ) !== 'string' ) {
+              continue;
+            }
+
+            if ( typeof( extended.competencies[ competency.key ] ) === 'undefined' ) {
+              extended.competencies[ competency.key ] = [];
+            }
+
+            extended.competencies[ competency.key ].push( extended.questions[ i ] );
 
           }
 
-          return correct;
+          // Return the final Quiz object.
+          return extended;
+
         };
 
-        properties.isChoice = function() {
-          return ( properties.type === 'choice' );
-        };
-
-        properties.isText = function() {
-          return ( properties.type === 'text' );
-        };
-
-        properties.isChoiceLiteral = function() {
-          return ( properties.type === 'choiceLiteral' );
-        };
-
-        // Return the modified properties object.
-        return properties;
-      };
-
-  } ] );
+    } ] );
 
 } )();
 
@@ -652,311 +767,233 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .factory( 'Reference', [  
 
-  app.factory( 'QuizScorecard', [
-    function() {
+      function () {
 
-      function makeCompetency( competencyData, pretestData, posttestData ) {
+        return function Reference( referenceKey, nameStr, descriptionStr, url ) {
 
-        var competency = {
-          description: "",
-          pretest: {
-            score: 0,
-            maxScore: 0,
-            percentCorrect: 0,
-            questions: []
-          },
-          posttest: {
-            score: 0,
-            maxScore: 0,
-            percentCorrect: 0,
-            questions: []
-          },
-          percentageDifference: null
+          return {
+
+            // The reference's own key in the referernces map.
+            key: referenceKey || '',
+
+            // A name that the reference will be referred to as in-text.
+            name:  nameStr || '',
+
+            // The complete citation as is will appear in footnotes/endnotes.
+            description: descriptionStr || '',
+
+            // A url to the full text of the reference for download.
+            url: url || ''
+
+          };
+
         };
 
-        competency.description = competencyData.description;
+      }
+      
+    ] );
 
-        var index;
-        var question;
+} )();
+( function () {
 
-        for ( index = 0; index < pretestData.questions.length; index += 1 ) {
-          question = pretestData.questions[ index ];
+  'use strict';
 
-          if ( question.competency.key === competencyData.key ) {
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .factory( 'Scorecard', [
 
-            competency.pretest.questions.push( question );
+      function () {
 
-            competency.pretest.maxScore += question.value;
+        function Scorecard( modulesData, pretestData, posttestData ) {
 
-            if ( question.isCorrect() ) {
-              competency.pretest.score += question.value;
-            }
+          // 
+          var modules = modulesData
+            .map( function ( module ) { 
+              return makeModule( module, pretestData, posttestData ); 
+            } );
+          var pretest = {
+            score: 0,
+            maxScore: 0,
+            percentCorrect: 0
+          };
+          var posttest = {
+            score: 0,
+            maxScore: 0,
+            percentCorrect: 0
+          };
+          var percentageDifference = null;
+
+          // 
+          modules
+            .forEach( function ( module ) {
+              pretest.score += module.pretest.score;
+              pretest.maxScore += module.pretest.maxScore;
+              if ( module.posttest !== null ) {
+                posttest.score += module.posttest.score;
+                posttest.maxScore += module.posttest.maxScore;
+              }
+              else {
+                posttest = null;
+              }
+            } );
+
+            // 
+          pretest.percentCorrect = pretest.score / pretest.maxScore * 100;
+          if ( posttest !== null ) {
+            posttest.percentCorrect = posttest.score / posttest.maxScore * 100;
+            percentageDifference = posttest.percentCorrect - pretest.percentCorrect;
           }
+
+          // 
+          return {
+            modules: modules,
+            pretest: pretest,
+            posttest: posttest,
+            percentageDifference: percentageDifference
+          };
+
         }
 
-        competency.pretest.percentCorrect = competency.pretest.score / competency.pretest.maxScore * 100;
+        function makeCompetency( competencyData, pretestData, posttestData ) {
 
-        if ( typeof posttestData  !== 'undefined' ) {
+          // 
+          var description = competencyData.description;
+          var pretest = {
+            score: 0,
+            maxScore: 0,
+            percentCorrect: 0,
+            questions: []
+          };
+          var posttest = {
+            score: 0,
+            maxScore: 0,
+            percentCorrect: 0,
+            questions: []
+          };
+          var percentageDifference = null;
 
-          for ( index = 0; index < posttestData.questions.length; index += 1 ) {
-            question = posttestData.questions[ index ];
-
-            if ( question.competency.key === competencyData.key ) {
-              competency.posttest.questions.push( question );
-
-              competency.posttest.maxScore += question.value;
-
+          // 
+          pretestData.questions
+            .filter( function ( question ) {
+              return question.competency.key === competencyData.key;
+            } )
+            .forEach( function ( question ) {
+              pretest.questions.push( question );
+              pretest.maxScore += question.value;
               if ( question.isCorrect() ) {
-                competency.posttest.score += question.value;
+                pretest.score += question.value;
               }
-            }
-          }
+            } );
+          pretest.percentCorrect = pretest.score / pretest.maxScore * 100;
 
-          competency.posttest.percentCorrect = competency.posttest.score / competency.posttest.maxScore * 100;
-          competency.percentageDifference = competency.posttest.percentCorrect - competency.pretest.percentCorrect;
-
-        }
-        else {
-          competency.posttest = null;
-        }
-
-        return competency;
-      }
-
-      function makeModule( moduleData, pretestData, posttestData ) {
-        var module = {
-          number: moduleData.number,
-          description: moduleData.description,
-          title: moduleData.title,
-          pretest: {
-            score: 0,
-            maxScore: 0,
-            percentCorrect: 0
-          },
-          posttest: {
-            score: 0,
-            maxScore: 0,
-            percentCorrect: 0
-          },
-          competencies: [],
-          percentageDifference: null
-        };
-
-        var index;
-
-        var competency;
-
-        for ( index = 0; index < moduleData.competencies.length; index += 1 ) {
-          var competencyData = moduleData.competencies[ index ];
-
-          competency = makeCompetency( competencyData, pretestData, posttestData );
-
-          module.competencies.push( competency );
-        }
-
-        for ( index = 0; index < module.competencies.length; index += 1 ) {
-          competency = module.competencies[ index ];
-
-          module.pretest.score    += competency.pretest.score;
-          module.pretest.maxScore += competency.pretest.maxScore;
-
-          if ( competency.posttest !== null ) {
-            module.posttest.score    += competency.posttest.score;
-            module.posttest.maxScore += competency.posttest.maxScore;
+          // 
+          if ( typeof( posttestData ) !== 'undefined' ) {
+            posttestData.questions
+              .filter( function ( question ) {
+                return question.competency.key === competencyData.key;
+              } )
+              .forEach( function ( question ) {
+                posttest.questions.push( question );
+                posttest.maxScore += question.value;
+                if ( question.isCorrect() ) {
+                  posttest.score += question.value;
+                }
+              } );
+            posttest.percentCorrect = posttest.score / posttest.maxScore * 100;
+            percentageDifference = posttest.percentCorrect - pretest.percentCorrect;
           }
           else {
-            module.posttest = null;
+            posttest = null;
           }
+
+          // 
+          return {
+            description: description,
+            pretest: pretest,
+            posttest: posttest,
+            percentageDifference: percentageDifference
+          };
+
         }
 
-        module.pretest.percentCorrect = module.pretest.score  / module.pretest.maxScore * 100;
+        function makeModule( moduleData, pretestData, posttestData ) {
+          
+          // 
+          var number = moduleData.number;
+          var description = moduleData.description;
+          var title = moduleData.title;
+          var competencies = moduleData.competencies
+            .map( function ( competency ) {
+              return makeCompetency( competency, pretestData, posttestData );
+            } );
+          var pretest = {
+            score: 0,
+            maxScore: 0,
+            percentCorrect: 0
+          };
+          var posttest = {
+            score: 0,
+            maxScore: 0,
+            percentCorrect: 0
+          };
+          var percentageDifference = null;
 
-        if ( module.posttest !== null ) {
-          module.posttest.percentCorrect = module.posttest.score / module.posttest.maxScore * 100;
+          // 
+          competencies
+            .forEach( function ( competency ) {
+              pretest.score    += competency.pretest.score;
+              pretest.maxScore += competency.pretest.maxScore;
+              if ( competency.posttest !== null ) {
+                posttest.score    += competency.posttest.score;
+                posttest.maxScore += competency.posttest.maxScore;
+              }
+              else {
+                posttest = null;
+              }
+            } );
+          pretest.percentCorrect = pretest.score  / pretest.maxScore * 100;
 
-          module.percentageDifference = module.posttest.percentCorrect - module.pretest.percentCorrect;
+          // 
+          if ( posttest !== null ) {
+            posttest.percentCorrect = posttest.score / posttest.maxScore * 100;
+            percentageDifference = posttest.percentCorrect - pretest.percentCorrect;
+          }
+
+          // 
+          return {
+            number: number, 
+            description: description, 
+            title: title, 
+            competencies: competencies,
+            pretest: pretest,
+            posttest: posttest,
+            percentageDifference: percentageDifference
+          };
+
         }
 
-        return module;
+        // Return the Scorecard factory function.
+        return Scorecard;
+
       }
 
-      return function QuizScorecard( modulesData, pretestData, posttestData ) {
+    ] );
 
-        var self = {
-          modules: [],
-          pretest: {
-            score: 0,
-            maxScore: 0,
-            percentCorrect: 0
-          },
-          posttest: {
-            score: 0,
-            maxScore: 0,
-            percentCorrect: 0
-          },
-          percentageDifference: null
-        };
-
-        var index;
-
-        for ( index = 0; index < modulesData.modules.length; index += 1 ) {
-            var moduleData = modulesData.modules[ index ];
-
-            self.modules.push( makeModule( moduleData, pretestData, posttestData ) );
-        }
-
-        var module;
-
-        for ( index = 0; index < self.modules.length; index += 1 ) {
-          module = self.modules[ index ];
-
-          self.pretest.score += module.pretest.score;
-          self.pretest.maxScore += module.pretest.maxScore;
-
-          if ( module.posttest !== null ) {
-            self.posttest.score += module.posttest.score;
-            self.posttest.maxScore += module.posttest.maxScore;
-          }
-          else {
-            self.posttest = null;
-          }
-        }
-
-        self.pretest.percentCorrect = self.pretest.score / self.pretest.maxScore * 100;
-
-        if ( self.posttest !== null ) {
-          self.posttest.percentCorrect = self.posttest.score / self.posttest.maxScore * 100;
-          self.percentageDifference = self.posttest.percentCorrect - self.pretest.percentCorrect;
-        }
-
-        return self;
-
-      };
-    }
-  ]);
 } )();
 
 ( function () {
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
-
-  app.factory( 'Reference', [ function () {
-
-      return function Reference( referenceKey, nameStr, descriptionStr, url ) {
-
-        return {
-          key:         referenceKey   || '',
-          name:        nameStr        || '',
-          description: descriptionStr || '',
-          url:         url            || ''
-        };
-
-      };
-
-    }
-  ] );
-
-} )();
-( function () {
-
-  'use strict';
-
-  var app = angular.module( 'peir-client' );
-
-  app.factory( 'References', [
-    '$modal', 
-    function ( $modal ) {
-
-      return function References( referencesMap ) {
-
-        // The base object to augment;
-        var self = {};
-
-        ///////////////////////////////
-        /// Reference Details Modal //
-        /////////////////////////////
-        ///
-        /// See the ReferenceModal directive for further details.
-        /// 
-
-        // Displays a modal that contains detailed information about the reference.
-        self.showReferenceModal = function ( referenceKey ) {
-
-          // Open a modal containing information about the clicked reference.
-          $modal.open( {
-            templateUrl: 'views/__Modals/ReferenceModal/ReferenceModal.html',
-            controller: 'ReferenceModalController',
-            resolve: {
-              '$modalArgs': function () {
-                return {
-                  reference: self.getReference( referenceKey )
-                };
-              }
-            }
-          } );
-        };
-
-        //////////////////////
-        /// References Map //
-        ////////////////////
-        ///
-        /// The references object maps reference keys to reference objects. Each reference object 
-        /// should conform to the following interface:
-        /// {
-        ///   key: ''         // The reference's own key in the referernces map.
-        ///   name: ''        // A name that the reference will be referred to as in-text.
-        ///   description: '' // The complete citation as is will appear in footnotes/endnotes.
-        ///   url: ''         // An (optional) url to the full text of the reference for download.
-        /// }
-        /// 
-        /// See the Reference factory for further details.
-        ///
-        /// Note: References should never change at runtime. They are to be considered as constants.
-        ///
-
-        var references = referencesMap || {};
-
-        // Get or set the references map (typically called at application start)
-        self.getReferences = function () {
-          return references;
-        };
-        self.setReferences = function ( quizReferences ) {
-          references = quizReferences;
-        };
-
-        // Get a particular reference by looking up its key.
-        self.getReference = function ( referenceKey ) {
-          if ( typeof( references ) !== 'object' ) {
-            throw new Error( 'References data must be an object!.' );
-          }
-          return references[ referenceKey ];
-        };
-
-        //////////////
-        // Exports //
-        ////////////
-
-        return self;
-
-      };
-
-    }
-  ] );
-
-} )();
-( function () {
-
-  'use strict';
-
-  var app = angular.module( 'peir-client' );
+  var app = angular.module( 'axon-angularjs-quizzes' );
 
   app.controller( 'KTPlanEditModalController', [
-    '$scope', '$state', '$modalInstance', '$modalArgs', '$log', '$sanitize',
-    function ( $scope, $state, $modalInstance, $modalArgs, $log, $sanitize ) {
+    '$scope', '$state', '$modalInstance', '$modalArgs', 
+    function ( $scope, $state, $modalInstance, $modalArgs ) {
 
       /////////////////////
       // Event Handlers //
@@ -1009,7 +1046,7 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  var app = angular.module( 'axon-angularjs-quizzes' );
 
   app.controller( 'ReferenceModalController', [
     '$scope', '$modalInstance', '$modalArgs', '$window', 

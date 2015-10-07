@@ -1,0 +1,24 @@
+<div class="quiz-answer">
+  <h3>
+    <i class="fa fa-2x fa-fw fa-check correct" ng-if="question.isCorrect()"></i>
+    <i class="fa fa-2x fa-fw fa-times incorrect" ng-if="!question.isCorrect()"></i>
+    &nbsp;{{ question.number }}. {{ question.text }}
+  </h3>
+  <div ng-if="question.isChoice()">
+    <ol>
+      <li ng-repeat="choice in question.choices">
+        {{ choice }}
+      </li>
+    </ol>
+  </div>
+  <p>
+    Your answer was:&nbsp;&nbsp;&nbsp;
+    <strong>{{ question.getAnswer() | uppercase }}</strong>
+  </p>
+  <p>
+    The correct answer was:&nbsp;&nbsp;&nbsp;
+    <strong>{{ question.getCorrectAnswer() | uppercase }}</strong>
+  </p>
+  <h4 ng-if="question.commentary">Commentary</h4>
+  <p compile="sanitizedCommentary"></p>
+</div>

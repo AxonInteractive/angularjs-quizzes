@@ -2,17 +2,18 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  var app = angular.module( 'axon-angularjs-quizzes' );
 
-  app.directive( 'quizScorecard', [ '$injector', 'QuizScorecard',
-    function ( $injector, QuizScorecard ) {
+  app.directive( 'quizScorecard', [ 
+    'Scorecard',
+    function ( Scorecard ) {
 
       return {
 
         scope: {
-          "beforeSource": "@",
-          "afterSource": "@",
-          "modulesSource": "@"
+          "beforeSource": "=",
+          "afterSource": "=",
+          "modulesSource": "="
         },
         restrict: 'AE',
         templateUrl: 'directives/quizScorecard/quizScorecard.html',
@@ -27,7 +28,7 @@
           // angular-progress-arc to behave, since internall it CALLS the complete attribute passed
           // to it as a function, and I'm grasping at straws as to how to make that work nicely.
           $scope.getFn = function ( src ) {
-            console.log( src );
+            //console.log( src );
             return function () {
               return src;
             };
@@ -37,21 +38,17 @@
           // Initialization //
           ///////////////////
 
-          var $beforeData = $injector.get( $scope.beforeSource );
-          var $moduleData = $injector.get( $scope.modulesSource );
-          var $afterData;
+          $scope.isSingleSource = !$scope.afterSource;
 
-          if ( typeof $scope.afterSource === 'string' ) {
-            $afterData = $injector.get( $scope.afterSource );
-            $scope.isSingleSource = false;
-          }
-          else {
-            $scope.isSIngleSource = true;
-          }
-
-          var scorecard = new QuizScorecard( $moduleData, $beforeData, $afterData );
-
+          var scorecard = Scorecard( 
+            $scope.modulesSource, 
+            $scope.beforeSource, 
+            $scope.afterSource 
+          );
           angular.extend( $scope, scorecard );
+
+          console.log( scorecard.modules );
+          console.log( scorecard.modules.posttest );
 
         }
 

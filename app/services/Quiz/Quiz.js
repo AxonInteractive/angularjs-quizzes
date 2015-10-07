@@ -2,159 +2,159 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .factory( 'Quiz', [
 
-  app.factory( 'Quiz', [
+      function () {
 
-    function () {
+        return function Quiz( properties ) {
 
-      return function Quiz( properties ) {
+          var defaults = {
 
-        // The name to be presented for this quiz.
-        properties.name = ( typeof properties.name === 'undefined' ) ? "Quiz" : properties.name;
+            // The name to be presented for this quiz.
+            name: '',
 
-        // Any special instructions that should be presented at the start of this quiz.
-        properties.instructions = ( typeof properties.instructions === 'undefined' ) ? "" : properties.instructions;
+            // Any special instructions that should be presented at the start of this quiz.
+            instructions: '',
 
-        // The expected maximum score that can be obtained on this quiz.
-        properties.maxScore = ( typeof properties.maxScore === 'undefined' ) ? 0 : properties.maxScore;
+            // The expected maximum score that can be obtained on this quiz.
+            maxScore: 0,
 
-        // The student's score on the quiz. Computed by calling grade().
-        properties.score = ( typeof properties.score === 'undefined' ) ? null : properties.score;
+            // The student's score on the quiz. Computed by calling grade().
+            score: null,
 
-        // The academic references that this quiz should attribute.
-        properties.references = ( typeof properties.references === 'undefined' ) ? [] : properties.references;
+            // The academic references that this quiz should attribute.
+            references: [],
 
-        // The list of questions that make up the quiz.
-        properties.questions = ( typeof properties.questions === 'undefined' ) ? [] : properties.questions;
+            // The list of questions that make up the quiz.
+            questions: [],
 
-        properties.competencies = ( function() {
-          var competencies = {};
+            // A list of competencies this quiz relates to.
+            competencies: [],
 
-          var questions = properties.questions;
+            clear: function () {
 
-          var competency;
+              // Set the score invalid.
+              this.score = null;
 
-          for ( var i = 0; questions.length; i += 1 ) {
+              // Clear the scoring of each of the questions.
+              for ( var i = 0; i < this.questions.length; i += 1 ) {
+                this.questions[ i ].incomplete = false;
+                this.questions[ i ].answer = null;
+                this.questions[ i ].correct = null;
+              }
 
-            var question = questions[ i ];
+            },
 
-            if ( typeof question === 'undefined' ) {
+            grade: function () {
+
+              // If this quiz has an invalid max score, then it shouldn't be graded.
+              if ( this.maxScore <= 0 ) {
+                return null;
+              }
+
+              // Initialize the score as 0.
+              this.score = 0;
+
+              // Add the question's value to the score if the student's answer was correct.
+              for ( var i = 0; i < this.questions.length; i += 1 ) {
+                var question = this.questions[ i ];
+                var correct = question.isCorrect();
+                this.score += ( correct ) ? question.value : 0;
+              }
+
+              return this.score;
+
+            },
+
+            getScoreFromAnswers: function( answers ) {
+
+              var score = 0;
+
+              for ( var i = 0; i < this.questions.length; i += 1 ) {
+                var question = this.questions[ i ];
+                var correct = question.isCorrectForAnswer( answers[ i ] );
+                score += ( correct ) ? question.value : 0;
+              }
+
+              return score;
+
+            },
+
+            getUnansweredQuestions: function() {
+
+              var questions = [];
+
+              for ( var i = 0; i < this.questions.length; i += 1 ) {
+                var question = this.questions[ i ];
+                if ( !question.isAnswered() ) {
+                  questions.push( question );
+                }
+              }
+
+              return questions;
+
+            },
+
+            // This function can be used to get a flat array of answers by scraping the values from each
+            // question. This is typically used for output of a user's answers to a database.
+            getAnswers: function () {
+
+              var answers = [];
+              for ( var i = 0; i < this.questions.length; i += 1 ) {
+                answers.push( this.questions[ i ].answer );
+              }
+
+              return answers;
+
+            },
+
+            // This function can be used to set the answer of each question by providing an array of
+            // answers that matches the number of questions in this quiz.
+            setAnswers: function ( answersArray ) {
+
+              if ( answersArray.length !== this.questions.length ) {
+                throw new Error( "The provided answers array is not the same size as the questions array!" );
+              }
+
+              for ( var i = 0; i < this.questions.length; i += 1 ) {
+                this.questions[ i ].answer = answersArray[ i ];
+              }
+
+            }
+
+          };
+
+          // Extend the defaults with the passed properties.
+          var extended = angular.extend( defaults, properties );
+
+          // Automatically construct the competencies from the questions.
+          for ( var i = 0; extended.questions.length; i += 1 ) {
+            
+            var question = extended.questions[ i ];
+            if ( typeof( question ) === 'undefined' ) {
               break;
             }
 
-            competency = questions[ i ].competency;
-
-            if ( competency === null ) {
+            var competency = extended.questions[ i ].competency;
+            if ( competency === null || typeof( competency.key ) !== 'string' ) {
               continue;
             }
 
-            if( typeof competency.key !== 'string' ) {
-              continue;
+            if ( typeof( extended.competencies[ competency.key ] ) === 'undefined' ) {
+              extended.competencies[ competency.key ] = [];
             }
 
-            if ( typeof competencies[ competency.key ] === 'undefined' ) {
-              competencies[ competency.key ] = [];
-            }
+            extended.competencies[ competency.key ].push( extended.questions[ i ] );
 
-            competencies[ competency.key ].push( questions[ i ] );
           }
 
-          return competencies;
+          // Return the final Quiz object.
+          return extended;
 
-        }() );
-
-        // Clear all answers and grading information from the quiz.
-        properties.clear = function () {
-          properties.score = null;
-          for ( var i = 0; i < properties.questions.length; i += 1 ) {
-            properties.questions[ i ].incomplete = false;
-            properties.questions[ i ].answer = null;
-            properties.questions[ i ].correct = null;
-          }
         };
 
-        // Check the answer of each question against the correct answer to grade each question, and
-        // compute the student's score by totaling all questions' values. Returns the student's
-        // score or null if the quiz shouldn't be graded.
-        properties.grade = function () {
-
-          if ( properties.maxScore <= 0 ) {
-            // If this quiz has an invalid max score, then it shouldn't be graded.
-            return null;
-          }
-
-          // Initialize the score as 0
-          properties.score = 0;
-
-          for ( var i = 0; i < properties.questions.length; i += 1 ) {
-
-           var question = properties.questions[ i ];
-
-           var correct = question.isCorrect();
-
-            // Add the question's value to the score if the student's answer was correct.
-            properties.score += ( correct ) ? question.value : 0;
-          }
-
-          return properties.score;
-        };
-
-        properties.getScoreFromAnswers = function( answers ) {
-
-          var score = 0;
-
-          for ( var i = 0; i < properties.questions.length; i += 1 ) {
-            var question = properties.questions[ i ];
-
-            var correct = question.isCorrectForAnswer( answers[ i ] );
-
-            score += ( correct ) ? question.value : 0;
-          }
-
-          return score;
-        };
-
-        properties.getUnansweredQuestions = function() {
-          var questions = [];
-
-          for ( var i = 0; i < properties.questions.length; i += 1 ) {
-            var question = properties.questions[ i ];
-
-            if ( !question.isAnswered() ) {
-              questions.push ( question );
-            }
-          }
-
-          return questions;
-        };
-
-        // This function can be used to get a flat array of answers by scraping the values from each
-        // question. This is typically used for output of a user's answers to a database.
-        properties.getAnswers = function () {
-          var answers = [];
-          for ( var i = 0; i < properties.questions.length; i += 1 ) {
-            answers.push( properties.questions[ i ].answer );
-          }
-          return answers;
-        };
-
-        // This function can be used to set the answer of each question by providing an array of
-        // answers that matches the number of questions in this quiz.
-        properties.setAnswers = function ( answersArray ) {
-          if ( answersArray.length !== properties.questions.length ) {
-            throw new Error( "The provided answers array is not the same size as the questions array!" );
-          }
-          for ( var i = 0; i < properties.questions.length; i += 1 ) {
-            properties.questions[ i ].answer = answersArray[ i ];
-          }
-        };
-
-        // Return the modified properties object.
-        return properties;
-
-      };
-
-  } ] );
+    } ] );
 
 } )();

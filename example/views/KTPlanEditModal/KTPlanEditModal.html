@@ -1,0 +1,26 @@
+<div id="kt-plan-edit-modal">
+	<div class="modal-header">
+	  <h3 class="modal-title">Module {{ module.data.number }}: {{ module.data.title }}</h3>
+	</div>
+	<div class="modal-body">
+
+		<p><strong>{{ competency.data.key }}:</strong> {{ competency.data.description }}</p>
+
+		<div class="form-group">
+			<label for="kt-plan-edit-reflection" class="control-label"><h4>REFLECTION</h4></label>
+			<p>What are my Pre/Posttest results &amp; results on other PEIR exercises? What knowledge gaps do I have &amp; what are my strengths &amp; weaknesses related to each PEIR objective?</p>
+		  <textarea id="kt-plan-edit-reflection" class="form-control" ng-model="competency.answer.reflection" placeholder="You have not yet submitted an answer." ></textarea>
+		</div>
+		
+		<div class="form-group">
+			<label for="kt-plan-edit-action" class="control-label"><h4>ACTION</h4></label>
+			<p>How will I improve my knowledge? What are my new learning objectives? How will I transfer what I have learned to practice? Learning becomes "knowing" through "action" &amp; reflective practice.</p>
+		  <textarea id="kt-plan-edit-action" class="form-control" ng-model="competency.answer.action" placeholder="You have not yet submitted an answer."></textarea>
+		</div>
+
+	</div>
+	<div class="modal-footer">
+	  <button class="btn btn-primary" ng-click="onOkayButtonClicked()">Save</button>
+	  <button class="btn btn-default" ng-click="onCancelButtonClicked()">Cancel</button>
+	</div>
+</div>

@@ -6,11 +6,13 @@ module.exports = function ( grunt ) {
   /// Load Tasks ///
   /////////////////
 
-  grunt.loadNpmTasks( 'grunt-contrib-concat' );
-  grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
-  grunt.loadNpmTasks( 'grunt-contrib-jshint' );
-  grunt.loadNpmTasks( 'grunt-contrib-uglify' );
-  grunt.loadNpmTasks( 'grunt-contrib-watch'  );
+  grunt.loadNpmTasks( 'grunt-contrib-concat'  );
+  grunt.loadNpmTasks( 'grunt-contrib-connect' );
+  grunt.loadNpmTasks( 'grunt-contrib-copy'    );
+  grunt.loadNpmTasks( 'grunt-contrib-cssmin'  );
+  grunt.loadNpmTasks( 'grunt-contrib-jshint'  );
+  grunt.loadNpmTasks( 'grunt-contrib-uglify'  );
+  grunt.loadNpmTasks( 'grunt-contrib-watch'   );
 
   ////////////////////////
   /// Configure Tasks ///
@@ -33,6 +35,37 @@ module.exports = function ( grunt ) {
       js: {
         src: [ 'app/**/*.js', '!app/**/*Test.js' ],
         dest: 'build/<%= pkg.name %>.js'
+      }
+    },
+
+    'connect': {
+      example: {
+        options: {
+          port: 9001,
+          keepalive: true
+        }
+      }
+    },
+
+    'copy': {
+      example: {
+        files: [ {
+        cwd: 'bower_components/axon-angularjs-utilities/build',
+        expand: true,
+        src: [ '**/*.html' ], 
+        dest: 'example/'
+        }, {
+        cwd: 'app/',
+        expand: true,
+        src: [ '**/*.html' ], 
+        dest: 'example/'
+        } ]
+      },
+      html: {
+        cwd: 'app/',
+        expand: true,
+        src: [ '**/*.html' ], 
+        dest: 'build/'
       }
     },
 
@@ -75,7 +108,9 @@ module.exports = function ( grunt ) {
   /// CLI Task Definitions ///
   ///////////////////////////
 
-  grunt.registerTask( 'build', [ 'jshint', 'concat' ] );
+  grunt.registerTask( 'build', [ /* 'jshint', */ 'concat', 'copy:html' ] );
+
+  grunt.registerTask( 'example', [ 'build', 'copy:example', 'connect' ] );
 
   grunt.registerTask( 'minify', [ 'build', 'cssmin', 'uglify' ] );
 

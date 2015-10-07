@@ -1,0 +1,22 @@
+
+<h1>Axon AngularJS Quizzes Test</h1>
+
+<p>{{ testVal }}</p>
+
+<h2>quiz Directive</h2>
+<quiz source="testQuiz"></quiz>
+
+<h2>quiz-results Directive</h2>
+<quiz-results source="testQuiz"></quiz-results>
+
+<h2>quiz-scorecard Directive</h2>
+<quiz-scorecard before-source="testQuiz" after-source="testQuiz" modules-source="testModules"></quiz-scorecard>
+
+<h2>quiz-question Directive</h2>
+<quiz-question question="testQuiz.questions[ 0 ]"></quiz-question>
+
+<h2>quiz-answer Directive</h2>
+<quiz-answer question="testQuiz.questions[ 0 ]"></quiz-answer>
+
+<h2>quiz-scorecard-question Directive</h2>
+<quiz-scorecard-question question="testQuiz.questions[ 0 ]"></quiz-scorecard-question>

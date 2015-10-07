@@ -1,0 +1,140 @@
+<div class="quiz-scorecard">
+  <hr />
+  <div ng-class="{ 'pretest-scorecard': !posttest, 'posttest-scorecard': posttest }">
+    <table class="module" ng-repeat="module in modules">
+      <thead>
+        <tr>
+          <th rowspan="2">
+            Module {{ module.number }} Core Competencies:
+            <br />
+            {{ module.title }}
+          </th>
+          <th colspan="2">PRETEST</th>
+          <th colspan="2" ng-if="posttest">POSTTEST</th>
+          <th rowspan="2" ng-if="posttest">% Difference from Pretest to Posttest</th>
+        </tr>
+        <tr>
+          <th>Questions</th>
+          <th>% Correct</th>
+          <th ng-if="posttest">Questions</th>
+          <th ng-if="posttest">% Correct</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="competency" ng-repeat="competency in module.competencies">
+          <td><strong>{{ module.number }}.{{ $index + 1 }}:</strong> {{ competency.description }}</td>
+          <td>
+            <ol class="questions">
+              <li ng-repeat="question in competency.pretest.questions">
+                <quiz-scorecard-question question="question"></quiz-scorecard-question>
+              </li>
+            </ol>
+            <div class="clearfix"></div>
+          </td>
+          <td>
+            <div class="score-percent-container">
+              <span class="score-percent">{{ competency.pretest.percentCorrect | number:0 }}%</span>
+              <progress-arc complete="{{ competency.pretest.percentCorrect / 100 }}"></progress-arc>
+            </div>
+          </td>
+          <td ng-if="posttest">
+            <ol class="questions">
+              <li ng-repeat="question in competency.posttest.questions">
+                <quiz-scorecard-question question="question"></quiz-scorecard-question>
+              </li>
+            </ol>
+            <div class="clearfix"></div>
+          </td>
+          <td ng-if="posttest">
+            <div class="score-percent-container">
+              <span class="score-percent">{{ competency.posttest.percentCorrect | number:0 }}%</span>
+              <progress-arc complete="{{ competency.posttest.percentCorrect / 100 }}"></progress-arc>
+            </div>
+          </td>
+          <td ng-if="posttest">
+            <div class="difference-percent-container">
+              <i ng-if="competency.percentageDifference > 0" class="better fa fa-2x fa-chevron-up"></i>
+              <br ng-if="competency.percentageDifference > 0" />
+              <span class="difference-percent">{{ competency.percentageDifference | number:0 }}</span>
+              <br ng-if="competency.percentageDifference < 0" />
+              <i ng-if="competency.percentageDifference < 0" class="worse fa fa-2x fa-chevron-down"></i>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr class="quiz-scorecard-subtotal">
+          <td>Subtotal</td>
+          <td>{{ module.pretest.score }} / {{ module.pretest.maxScore }}</td>
+          <td>
+            <div class="score-percent-container">
+              <span class="score-percent">{{ module.pretest.percentCorrect | number:0 }}%</span>
+              <progress-arc complete="{{ module.pretest.percentCorrect / 100 }}"></progress-arc>
+            </div>
+          </td>
+          <td ng-if="posttest">{{ module.posttest.score }} / {{ module.posttest.maxScore }}</td>
+          <td ng-if="posttest">
+            <div class="score-percent-container">
+              <span class="score-percent">{{ module.posttest.percentCorrect | number:0 }}%</span>
+              <progress-arc complete="{{ module.posttest.percentCorrect / 100 }}"></progress-arc>
+            </div>
+          </td>
+          <td ng-if="posttest">
+            <div class="difference-percent-container">
+              <i ng-if="module.percentageDifference > 0" class="better fa fa-2x fa-chevron-up"></i>
+              <br ng-if="module.percentageDifference > 0" />
+              <span class="difference-percent">{{ module.percentageDifference | number:0 }}</span>
+              <br ng-if="module.percentageDifference < 0" />
+              <i ng-if="module.percentageDifference < 0" class="worse fa fa-2x fa-chevron-down"></i>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+    <table>
+      <thead>
+        <tr>
+          <th rowspan="2">Overall Result</th>
+          <th colspan="2">PRETEST</th>
+          <th colspan="2" ng-if="posttest">POSTTEST</th>
+          <th rowspan="2" ng-if="posttest">% Difference from Pretest to Posttest</th>
+        </tr>
+        <tr>
+          <th>Questions</th>
+          <th>% Correct</th>
+          <th ng-if="posttest">Questions</th>
+          <th ng-if="posttest">% Correct</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr class="quiz-scorecard-total">
+          <td>TOTAL</td>
+          <td>{{ pretest.score }} / {{ pretest.maxScore }}</td>
+          <td>
+            <div class="score-percent-container">
+              <span class="score-percent">{{ pretest.percentCorrect | number:0 }}%</span>
+              <progress-arc complete="{{ pretest.percentCorrect / 100 }}"></progress-arc>
+            </div>
+          </td>
+          <td ng-if="posttest">{{ posttest.score }} / {{ posttest.maxScore }}</td>
+          <td ng-if="posttest">
+            <div class="score-percent-container">
+              <span class="score-percent">{{ posttest.percentCorrect | number:0 }}%</span>
+              <progress-arc complete="{{ posttest.percentCorrect / 100 }}"></progress-arc>
+            </div>
+          </td>
+          <td ng-if="posttest">
+            <div class="difference-percent-container">
+              <i ng-if="percentageDifference > 0" class="better fa fa-2x fa-chevron-up"></i>
+              <br ng-if="percentageDifference > 0" />
+              <span class="difference-percent">{{ percentageDifference | number:0 }}</span>
+              <br ng-if="percentageDifference < 0" />
+              <i ng-if="percentageDifference < 0" class="worse fa fa-2x fa-chevron-down"></i>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <hr />
+</div>

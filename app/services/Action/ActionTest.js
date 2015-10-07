@@ -2,7 +2,7 @@
 
   'use strict';
 
-  describe( 'QuizQuestionTest', function () {
+  describe( 'ActionTest', function () {
 
       it( "First assertion",function () {
 

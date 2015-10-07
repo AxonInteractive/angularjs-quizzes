@@ -2,9 +2,10 @@
 
   'use strict';
 
-  var app = angular.module( 'peir-client' );
+  var app = angular.module( 'axon-angularjs-quizzes' );
 
-  app.directive( 'quizScorecardQuestion', [ '$modal',
+  app.directive( 'quizScorecardQuestion', [ 
+    '$modal',
     function ( $modal ) {
 
       return {
@@ -16,7 +17,7 @@
         templateUrl: 'directives/quizScorecardQuestion/quizScorecardQuestion.html',
         link: function ( $scope, $elem, $attrs ) {
 
-          $scope.onButtonClicked = function() {
+          $scope.onButtonClicked = function () {
             $modal.open( {
                 templateUrl: 'views/__Modals/QuizAnswerModal/QuizAnswerModal.html',
                 controller: 'QuizAnswerModalController',
