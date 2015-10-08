@@ -1,6 +1,6 @@
 {
   "name": "axon-angularjs-quizzes",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A collection of angular utilities for creating pretests, posttests and comparative scorecards.",
   "authors": [
     {
@@ -24,12 +24,12 @@
     "url": "https://github.com/AxonInteractive/angularjs-quizzes.git"
   },
   "dependencies": {
-    "angular"                   : "^1.4.7",
+    "angular": "^1.4.7",
     "angular-ui-bootstrap-bower": "^0.13.4",
-    "angular-ui-router"         : "^0.2.15",
-    "bootstrap-css-only"        : "^3.3.5",
-    "font-awesome"              : "^4.4.0",
-    "axon-angularjs-utilities"  : "^0.0.9"
+    "angular-ui-router": "^0.2.15",
+    "bootstrap-css-only": "^3.3.5",
+    "font-awesome": "^4.4.0",
+    "axon-angularjs-utilities": "^0.0.9"
   },
   "devDependencies": {},
   "ignore": [
