@@ -22,7 +22,7 @@
       </thead>
       <tbody>
         <tr class="competency" ng-repeat="competency in module.competencies">
-          <td><strong>{{ module.number }}.{{ $index + 1 }}:</strong> {{ competency.description }}</td>
+          <td><strong>{{ competency.name }}:</strong> {{ competency.description }}</td>
           <td>
             <ol class="questions">
               <li ng-repeat="question in competency.pretest.questions">

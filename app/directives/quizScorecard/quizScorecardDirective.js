@@ -47,8 +47,8 @@
           );
           angular.extend( $scope, scorecard );
 
-          console.log( scorecard.modules );
-          console.log( scorecard.modules.posttest );
+          console.log( $scope.modules );
+          console.log( $scope.modules[ 0 ].competencies );
 
         }
 

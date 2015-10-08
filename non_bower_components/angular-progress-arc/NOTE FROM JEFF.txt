@@ -1,1 +1,7 @@
 This was placed here rather than bower_components because I had to core hack it in order to make it work for our use-case.
+
+Added (during PEIR development): 
+Something I can't remember anymore (now doing PCel).
+
+Added (during PCeL development): 
+angular.extend(scope, attr);
