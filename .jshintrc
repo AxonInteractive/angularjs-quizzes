@@ -115,21 +115,11 @@
 
     "maxerr"        : 100,      // Maximum errors before stopping.
     "predef"        : [         // Extra globals.
-        "$",
         "angular",
-        "Bridge",
         "console",
-        "Cubic",
         "describe",
         "expect",
-        "gulp",
-        "it",
-        "jQuery",
-        "module",
-        "PEIR",
-        "require",
-        "Spinner",
-        "TweenMax"
+        "it"
     ],
     "indent"        : 2         // Specify indentation spacing
 }
