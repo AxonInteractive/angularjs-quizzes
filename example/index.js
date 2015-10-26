@@ -61,8 +61,16 @@
     function ( Competency ) {
 
       return {
-        "1": Competency( "1", "1", "Competency 1" ),
-        "2": Competency( "2", "2", "Competency 2" )
+        "1": Competency( {
+          key: "1", 
+          name: "1", 
+          description: "Competency 1" 
+        } ),
+        "2": Competency( {
+          key: "2", 
+          name: "2", 
+          description: "Competency 2" 
+        } )
       };
 
     }

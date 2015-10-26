@@ -2,7 +2,7 @@
 
   'use strict';
 
-  describe( 'ReferenceTest', function () {
+  describe( 'CompetencyTest', function () {
 
       it( "First assertion",function () {
 

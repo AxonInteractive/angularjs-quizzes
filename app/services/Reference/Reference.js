@@ -8,23 +8,25 @@
 
       function () {
 
-        return function Reference( referenceKey, nameStr, descriptionStr, url ) {
+        return function Reference( reference ) {
 
-          return {
+          var defaults = {
 
             // The reference's own key in the referernces map.
-            key: referenceKey || '',
+            key: '',
 
             // A name that the reference will be referred to as in-text.
-            name:  nameStr || '',
+            name: '',
 
             // The complete citation as is will appear in footnotes/endnotes.
-            description: descriptionStr || '',
+            description: '',
 
             // A url to the full text of the reference for download.
-            url: url || ''
+            url: ''
 
           };
+
+          return angular.merge( defaults, reference );
 
         };
 

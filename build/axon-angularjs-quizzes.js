@@ -1,4 +1,4 @@
-/*! axon-angularjs-quizzes - v0.0.1 - 2015-10-08 */
+/*! axon-angularjs-quizzes - v0.0.2 - 2015-10-26 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // app.js /////////////////////////////////////////////////////////////////////////////////////////
@@ -283,23 +283,25 @@
 
       function () {
 
-        return function Competency( competencyKey, nameStr, descriptionStr, url ) {
+        return function Competency( competency ) {
 
-          return {
+          var defaults = {
 
             // The competency's own key in the referernces map.
-            key: competencyKey || '',
+            key: '',
 
             // A name that the competency will be referred to as in-text.
-            name: nameStr || '',
+            name: '',
 
             // A human-readable description of this competency.
-            description: descriptionStr || '',
+            description: '',
 
             // A url to the full text of the competency for download.
-            url: url || ''
+            url: ''
 
           };
+
+          return angular.merge( defaults, competency );
 
         };
 
@@ -773,23 +775,25 @@
 
       function () {
 
-        return function Reference( referenceKey, nameStr, descriptionStr, url ) {
+        return function Reference( reference ) {
 
-          return {
+          var defaults = {
 
             // The reference's own key in the referernces map.
-            key: referenceKey || '',
+            key: '',
 
             // A name that the reference will be referred to as in-text.
-            name:  nameStr || '',
+            name: '',
 
             // The complete citation as is will appear in footnotes/endnotes.
-            description: descriptionStr || '',
+            description: '',
 
             // A url to the full text of the reference for download.
-            url: url || ''
+            url: ''
 
           };
+
+          return angular.merge( defaults, reference );
 
         };
 

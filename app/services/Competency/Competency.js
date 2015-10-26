@@ -8,23 +8,25 @@
 
       function () {
 
-        return function Competency( competencyKey, nameStr, descriptionStr, url ) {
+        return function Competency( competency ) {
 
-          return {
+          var defaults = {
 
             // The competency's own key in the referernces map.
-            key: competencyKey || '',
+            key: '',
 
             // A name that the competency will be referred to as in-text.
-            name: nameStr || '',
+            name: '',
 
             // A human-readable description of this competency.
-            description: descriptionStr || '',
+            description: '',
 
             // A url to the full text of the competency for download.
-            url: url || ''
+            url: ''
 
           };
+
+          return angular.merge( defaults, competency );
 
         };
 
