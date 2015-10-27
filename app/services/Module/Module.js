@@ -8,7 +8,7 @@
 
       function () {
 
-        return function Module( properties ) {
+        return function Module( module ) {
 
           var defaults = {
 
@@ -30,10 +30,7 @@
           };
 
           // Extend the defaults with the passed properties.
-          var extended = angular.extend( defaults, properties );
-
-          // Return the final Module object.
-          return extended;
+          return angular.extend( defaults, module );
 
         };
 

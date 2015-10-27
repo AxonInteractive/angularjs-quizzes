@@ -8,188 +8,188 @@
 
       function () {
 
-        return function Question( properties ) {
+        return function Question( question ) {
 
+          var merged = null;
+
+          // CONSTANTS
+
+          // Multiple choice questions where the student picks an option from the choices array but 
+          // is displayed in a literal form for results
+          var TYPE_CHOICE = 'choice';
+
+          // True/False questions where the student picks an option from the choices array.
+          var TYPE_CHOICE_LITERAL = 'choiceLiteral';
+
+          // Short-Answer questions and potentially numeric answers expected to be an exact string 
+          // match of the correct answer.
+          var TYPE_TEXT = 'text';
+
+          // DEFAULTS
+          
           var defaults = {
 
-            // The ID number of the question, for administrative purposes.
-            number: 0,
-
-            // The type of question this is from the following list:
-            // [
-            //   "text",         -- Short-Answer questions and potentially numeric answers expected to be
-            //                      an exact string match of the correct answer.
-            //   "choiceLiteral" -- True/False questions where the student picks one of
-            //                      several options from the choices array.
-            //   "choice"        -- Multiple choice questions where the student picks on of several
-            //                      several options from the choices array but is displayed in a literal
-            //                      form for results
-            //   ""
-            // ]
-            type: 'choice',
-
-            // The number of points this question contributes toward the student's score if they
-            // answer it correctly.
-            value: 0,
-
-            // The question text.
-            text: '',
+            // The student's answer to this question. This will be set when a quiz is submitted 
+            // by the student, using the setAnswers() function.
+            answer: null,
 
             // An array of potential answers that the student can pick from. If this is a
             // text question, this should be a list of strings that represent potential correct
             // responses to match the student's answer against.
             choices: [],
 
-            // The array index of the correct choice within the list of choices above or a string
-            // that represents the correct answer (must be an exact match).
-            correctAnswer: -1,
+            // Text to be presented to the student after the quiz is completed that justifies 
+            // the correct answer for the question and provides further background.
+            commentary: null,
 
-            // The student's answer to this question. This will be set when a quiz is submitted by
-            // the student, using the setAnswers() function.
-            answer: null,
-
-            // Whether the student's answer to this question is correct or not.
-            correct: null,
-
-            // Text to be presented to the student after the quiz is completed that justifies the
-            // correct answer for the question and provides further background to aid understanding.
-            commentary: '',
-
-            // The Core Competency with which this question is associated.
+            // The Competency object with which this question is associated.
             competency: null,
 
-            // The additional data to be stored inside of the question.
-            additionalData: null,
+            // The array index of the correct choice within the list of choices above or a 
+            // string that represents the correct answer (must be an exact match).
+            correctAnswer: null,
 
-            getAnswer: function () {
+            // Whether or not the question is correct (according to the server).
+            isCorrect: null,
 
-              // If the answer is falsey then return an empty string
-              if ( !this.answer && this.answer !== 0 ) {
-                return "No answer";
-              }
-              else if ( this.isChoiceLiteral() ) {
-                return this.choices[ this.answer ];
-              }
-              else if ( this.isChoice() ) {
-                // 65 is ASCII for 'A'
-                return String.fromCharCode( 65 + parseInt( this.answer ) );
-              }
-              else {
-                return this.answer;
-              }
+            // The key/index of the question within the quiz questions array.
+            key: null,
 
-            },
+            // The number of the question within the quiz as the user would see it.
+            number: null,
 
-            getCorrectAnswer: function() {
+            // The question text.
+            text: '',
 
-              //If the question type is a text then return the correct answer as is.
-              if ( this.isChoiceLiteral() ) {
-                return this.choices[ this.correctAnswer ];
-              }
-              else if ( this.isChoice() ) {
-                // 65 is ASCII for 'A'
-                return String.fromCharCode( 65 + parseInt( this.correctAnswer ) );
-              }
-              else {
-                return this.correctAnswer;
-              }
+            // The format to present the question as and how to interpret answers. See the 
+            // constants above for the complete list of available types.
+            type: TYPE_CHOICE,
 
-            },
-
-            getChoice: function( index ) {
-
-              if ( this.isChoiceLiteral() ) {
-                return this.choices[ index ];
-              }
-              else if ( this.isChoice() ) {
-                return String.fromCharCode( 65 + index );
-              }
-              else {
-                return index;
-              }
-
-            },
-
-            isAnswered: function() {
-
-              return ( this.answer !== null );
-
-            },
-
-            isChoice: function() {
-
-              return ( this.type === 'choice' );
-
-            },
-
-            isCorrect: function () {
-
-              return this.isCorrectForAnswer( this.answer );
-
-            },
-
-            isCorrectForAnswer: function ( answer ) {
-
-              var correctAnswer = null;
-              var correct = false;
-              var formattedAnswer = null;
-              switch ( this.type ) {
-
-                case "text":
-                  // Compare the student's answer to each of the possible choices, and consider the
-                  // answer to be correct if any of them matches. Compare all strings as lower-case
-                  // text and remove all whitespace to eliminate common sources of false-negatives.
-                  formattedAnswer = answer.toString().toLowerCase().replace( " ", "" );
-                  for ( var j = 0; j < this.choices.length; j += 1 ) {
-                    correctAnswer = this.choices[ j ].toString().toLowerCase().replace( " ", "" );
-                    if ( formattedAnswer === correctAnswer ) {
-                      correct = true;
-                      break;
-                    }
-                  }
-                  break;
-
-                case "choice":
-                  // Compare the student's answer to the correct answer as integers, because they both
-                  // refer to an index of the choices array. If they are equal, the student answered
-                  // with the correct answer.
-                  formattedAnswer = parseInt( answer );
-                  correctAnswer = parseInt( this.correctAnswer );
-                  correct = ( formattedAnswer === correctAnswer );
-                  break;
-
-
-                case "choiceLiteral":
-                  // Compare the student's answer to the correct answer as integers, because they both
-                  // refer to an index of the choices array. If they are equal, the student answered
-                  // with the correct answer.
-                  formattedAnswer = parseInt( answer );
-                  correctAnswer = parseInt( this.correctAnswer );
-                  correct = ( formattedAnswer === correctAnswer );
-                  break;
-
-              }
-
-              return correct;
-
-            },
-
-            isChoiceLiteral: function() {
-
-              return ( this.type === 'choiceLiteral' );
-
-            },
-
-            isText: function() {
-
-              return ( this.type === 'text' );
-
-            }
+            // The number of points this question contributes toward the student's score if 
+            // they answer it correctly.
+            value: 0
 
           };
 
-          // Return the final QuizQuestion object.
-          return angular.extend( defaults, properties );
+          // FUNCTIONS
+
+          function clearAnswer () {
+
+            merged.answer = null;
+
+          }
+
+          function clearResultData () {
+
+            merged.commentary = null;
+            merged.correctAnswer = null;
+            merged.isCorrect = null;
+
+          }
+
+          function getFormattedAnswer () {
+            
+            if ( !isAnswered() ) {
+              return "No answer";
+            }
+            else {
+              getFormattedChoice( merged.answer );
+            }
+
+          }
+
+          function getFormattedChoice ( index ) {
+
+            // FIXME: This is better implemented as a filter.
+            
+            if ( isChoiceLiteral() ) {
+              return merged.choices[ index ];
+            }
+            else if ( isChoice() ) {
+              // 65 is ASCII for 'A'
+              return String.fromCharCode( 65 + parseInt( index ) );
+            }
+            else {
+              return index;
+            }
+
+          }
+
+          function getFormattedCorrectAnswer () {
+
+            if ( !hasResultData() ) {
+              return "No answer";
+            }
+            else {
+              getFormattedChoice( merged.correctAnswer );
+            }
+
+          }
+
+          function hasCompetency () {
+
+            return ( merged.competency !== null );
+
+          }
+
+          function hasResultData () {
+
+            return ( merged.correctAnswer !== null && merged.commentary !== null );
+
+          }
+
+          function isAnswered () {
+
+            return ( merged.answer !== null );
+
+          }
+
+          function isChoice () {
+
+            return ( merged.type === 'choice' );
+
+          }
+
+          function isChoiceLiteral () {
+
+            return ( merged.type === 'choiceLiteral' );
+
+          }
+
+          function isText () {
+
+            return ( merged.type === 'text' );
+
+          }
+
+          // INIT
+
+          ( function init () {
+
+            // Merge the defaults with the custom implementation and the functions that are defined 
+            // above into a single object to represent the Quiz.
+            merged = angular.merge( 
+              defaults, 
+              question, 
+              {
+                clearAnswer: clearAnswer,
+                clearResultData: clearResultData,
+                getFormattedAnswer: getFormattedAnswer,
+                getFormattedChoice: getFormattedChoice, 
+                getFormattedCorrectAnswer: getFormattedCorrectAnswer,
+                hasCompetency: hasCompetency, 
+                hasResultData: hasResultData,
+                isAnswered: isAnswered,
+                isChoice: isChoice,
+                isChoiceLiteral: isChoiceLiteral,
+                isText: isText
+              } 
+            );
+
+          } )();
+
+          // Return the merged Question object.
+          return merged;
           
         };
 

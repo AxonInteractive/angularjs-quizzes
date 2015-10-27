@@ -8,7 +8,7 @@
 
       function () {
 
-        return function Page( properties ) {
+        return function Page( page ) {
 
           var defaults = {
 
@@ -39,10 +39,7 @@
           };
 
           // Extend the defaults with the passed properties.
-          var extended = angular.extend( defaults, properties );
-
-          // Return the final ModulePage object.
-          return extended;
+          return angular.merge( defaults, page );
 
         };
 

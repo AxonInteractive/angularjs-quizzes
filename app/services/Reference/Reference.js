@@ -26,6 +26,7 @@
 
           };
 
+          // Extend the defaults with the passed properties.
           return angular.merge( defaults, reference );
 
         };

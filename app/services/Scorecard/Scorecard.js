@@ -84,7 +84,7 @@
             .forEach( function ( question ) {
               pretest.questions.push( question );
               pretest.maxScore += question.value;
-              if ( question.isCorrect() ) {
+              if ( question.isCorrect ) {
                 pretest.score += question.value;
               }
             } );
@@ -99,7 +99,7 @@
               .forEach( function ( question ) {
                 posttest.questions.push( question );
                 posttest.maxScore += question.value;
-                if ( question.isCorrect() ) {
+                if ( question.isCorrect ) {
                   posttest.score += question.value;
                 }
               } );

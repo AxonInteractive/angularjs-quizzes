@@ -1,7 +1,7 @@
 <div class="quiz-scorecard-question">
-  <button ng-click="onButtonClicked()" ng-class="{ 'correct': question.isCorrect(), 'incorrect': !question.isCorrect() }">
+  <button ng-click="onButtonClicked()" ng-class="{ 'correct': question.isCorrect, 'incorrect': !question.isCorrect }">
     <span>{{ question.number }}&nbsp;</span>
-    <i class="fa fa-check correct" ng-if="question.isCorrect()"></i>
-    <i class="fa fa-times incorrect" ng-if="!question.isCorrect()"></i>
+    <i class="fa fa-check correct" ng-if="question.isCorrect"></i>
+    <i class="fa fa-times incorrect" ng-if="!question.isCorrect"></i>
   </button>
 </div>

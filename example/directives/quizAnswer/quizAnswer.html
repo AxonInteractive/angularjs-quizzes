@@ -1,7 +1,7 @@
 <div class="quiz-answer">
   <h3>
-    <i class="fa fa-2x fa-fw fa-check correct" ng-if="question.isCorrect()"></i>
-    <i class="fa fa-2x fa-fw fa-times incorrect" ng-if="!question.isCorrect()"></i>
+    <i class="fa fa-2x fa-fw fa-check correct" ng-if="question.isCorrect"></i>
+    <i class="fa fa-2x fa-fw fa-times incorrect" ng-if="!question.isCorrect"></i>
     &nbsp;{{ question.number }}. {{ question.text }}
   </h3>
   <div ng-if="question.isChoice()">
@@ -13,12 +13,14 @@
   </div>
   <p>
     Your answer was:&nbsp;&nbsp;&nbsp;
-    <strong>{{ question.getAnswer() | uppercase }}</strong>
+    <strong>{{ question.getFormattedAnswer() | uppercase }}</strong>
   </p>
   <p>
     The correct answer was:&nbsp;&nbsp;&nbsp;
-    <strong>{{ question.getCorrectAnswer() | uppercase }}</strong>
+    <strong>{{ question.getFormattedCorrectAnswer() | uppercase }}</strong>
   </p>
-  <h4 ng-if="question.commentary">Commentary</h4>
-  <p compile="sanitizedCommentary"></p>
+  <div ng-if="question.commentary">
+    <h4>Commentary</h4>
+    <p compile="sanitizedCommentary"></p>
+  </div>
 </div>

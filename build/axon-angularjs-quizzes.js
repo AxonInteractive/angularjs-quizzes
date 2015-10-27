@@ -1,4 +1,4 @@
-/*! axon-angularjs-quizzes - v0.0.2 - 2015-10-26 */
+/*! axon-angularjs-quizzes - v0.0.2 - 2015-10-27 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // app.js /////////////////////////////////////////////////////////////////////////////////////////
@@ -255,17 +255,23 @@
 
       function () {
 
-        return function Action( state, label ) {
+        return function Action( action ) {
 
-          return {
+          var defaults = {
 
-            // The router state this action should navigate to.
-            state: state || '',
+            // The URL this action should navigate to (if any).
+            href: '',
+
+            // The router state this action should navigate to (if any).
+            sref: '',
 
             // The label to place upon the button that renders this action.
-            label: label || 'Next'
+            label: 'Next'
 
           };
+
+          // Extend the defaults with the passed properties.
+          return angular.merge( defaults, action );
 
         };
 
@@ -320,7 +326,7 @@
 
       function () {
 
-        return function Module( properties ) {
+        return function Module( module ) {
 
           var defaults = {
 
@@ -342,10 +348,7 @@
           };
 
           // Extend the defaults with the passed properties.
-          var extended = angular.extend( defaults, properties );
-
-          // Return the final Module object.
-          return extended;
+          return angular.extend( defaults, module );
 
         };
 
@@ -363,7 +366,7 @@
 
       function () {
 
-        return function Page( properties ) {
+        return function Page( page ) {
 
           var defaults = {
 
@@ -394,10 +397,7 @@
           };
 
           // Extend the defaults with the passed properties.
-          var extended = angular.extend( defaults, properties );
-
-          // Return the final ModulePage object.
-          return extended;
+          return angular.merge( defaults, page );
 
         };
 
@@ -415,188 +415,188 @@
 
       function () {
 
-        return function Question( properties ) {
+        return function Question( question ) {
 
+          var merged = null;
+
+          // CONSTANTS
+
+          // Multiple choice questions where the student picks an option from the choices array but 
+          // is displayed in a literal form for results
+          var TYPE_CHOICE = 'choice';
+
+          // True/False questions where the student picks an option from the choices array.
+          var TYPE_CHOICE_LITERAL = 'choiceLiteral';
+
+          // Short-Answer questions and potentially numeric answers expected to be an exact string 
+          // match of the correct answer.
+          var TYPE_TEXT = 'text';
+
+          // DEFAULTS
+          
           var defaults = {
 
-            // The ID number of the question, for administrative purposes.
-            number: 0,
-
-            // The type of question this is from the following list:
-            // [
-            //   "text",         -- Short-Answer questions and potentially numeric answers expected to be
-            //                      an exact string match of the correct answer.
-            //   "choiceLiteral" -- True/False questions where the student picks one of
-            //                      several options from the choices array.
-            //   "choice"        -- Multiple choice questions where the student picks on of several
-            //                      several options from the choices array but is displayed in a literal
-            //                      form for results
-            //   ""
-            // ]
-            type: 'choice',
-
-            // The number of points this question contributes toward the student's score if they
-            // answer it correctly.
-            value: 0,
-
-            // The question text.
-            text: '',
+            // The student's answer to this question. This will be set when a quiz is submitted 
+            // by the student, using the setAnswers() function.
+            answer: null,
 
             // An array of potential answers that the student can pick from. If this is a
             // text question, this should be a list of strings that represent potential correct
             // responses to match the student's answer against.
             choices: [],
 
-            // The array index of the correct choice within the list of choices above or a string
-            // that represents the correct answer (must be an exact match).
-            correctAnswer: -1,
+            // Text to be presented to the student after the quiz is completed that justifies 
+            // the correct answer for the question and provides further background.
+            commentary: null,
 
-            // The student's answer to this question. This will be set when a quiz is submitted by
-            // the student, using the setAnswers() function.
-            answer: null,
-
-            // Whether the student's answer to this question is correct or not.
-            correct: null,
-
-            // Text to be presented to the student after the quiz is completed that justifies the
-            // correct answer for the question and provides further background to aid understanding.
-            commentary: '',
-
-            // The Core Competency with which this question is associated.
+            // The Competency object with which this question is associated.
             competency: null,
 
-            // The additional data to be stored inside of the question.
-            additionalData: null,
+            // The array index of the correct choice within the list of choices above or a 
+            // string that represents the correct answer (must be an exact match).
+            correctAnswer: null,
 
-            getAnswer: function () {
+            // Whether or not the question is correct (according to the server).
+            isCorrect: null,
 
-              // If the answer is falsey then return an empty string
-              if ( !this.answer && this.answer !== 0 ) {
-                return "No answer";
-              }
-              else if ( this.isChoiceLiteral() ) {
-                return this.choices[ this.answer ];
-              }
-              else if ( this.isChoice() ) {
-                // 65 is ASCII for 'A'
-                return String.fromCharCode( 65 + parseInt( this.answer ) );
-              }
-              else {
-                return this.answer;
-              }
+            // The key/index of the question within the quiz questions array.
+            key: null,
 
-            },
+            // The number of the question within the quiz as the user would see it.
+            number: null,
 
-            getCorrectAnswer: function() {
+            // The question text.
+            text: '',
 
-              //If the question type is a text then return the correct answer as is.
-              if ( this.isChoiceLiteral() ) {
-                return this.choices[ this.correctAnswer ];
-              }
-              else if ( this.isChoice() ) {
-                // 65 is ASCII for 'A'
-                return String.fromCharCode( 65 + parseInt( this.correctAnswer ) );
-              }
-              else {
-                return this.correctAnswer;
-              }
+            // The format to present the question as and how to interpret answers. See the 
+            // constants above for the complete list of available types.
+            type: TYPE_CHOICE,
 
-            },
-
-            getChoice: function( index ) {
-
-              if ( this.isChoiceLiteral() ) {
-                return this.choices[ index ];
-              }
-              else if ( this.isChoice() ) {
-                return String.fromCharCode( 65 + index );
-              }
-              else {
-                return index;
-              }
-
-            },
-
-            isAnswered: function() {
-
-              return ( this.answer !== null );
-
-            },
-
-            isChoice: function() {
-
-              return ( this.type === 'choice' );
-
-            },
-
-            isCorrect: function () {
-
-              return this.isCorrectForAnswer( this.answer );
-
-            },
-
-            isCorrectForAnswer: function ( answer ) {
-
-              var correctAnswer = null;
-              var correct = false;
-              var formattedAnswer = null;
-              switch ( this.type ) {
-
-                case "text":
-                  // Compare the student's answer to each of the possible choices, and consider the
-                  // answer to be correct if any of them matches. Compare all strings as lower-case
-                  // text and remove all whitespace to eliminate common sources of false-negatives.
-                  formattedAnswer = answer.toString().toLowerCase().replace( " ", "" );
-                  for ( var j = 0; j < this.choices.length; j += 1 ) {
-                    correctAnswer = this.choices[ j ].toString().toLowerCase().replace( " ", "" );
-                    if ( formattedAnswer === correctAnswer ) {
-                      correct = true;
-                      break;
-                    }
-                  }
-                  break;
-
-                case "choice":
-                  // Compare the student's answer to the correct answer as integers, because they both
-                  // refer to an index of the choices array. If they are equal, the student answered
-                  // with the correct answer.
-                  formattedAnswer = parseInt( answer );
-                  correctAnswer = parseInt( this.correctAnswer );
-                  correct = ( formattedAnswer === correctAnswer );
-                  break;
-
-
-                case "choiceLiteral":
-                  // Compare the student's answer to the correct answer as integers, because they both
-                  // refer to an index of the choices array. If they are equal, the student answered
-                  // with the correct answer.
-                  formattedAnswer = parseInt( answer );
-                  correctAnswer = parseInt( this.correctAnswer );
-                  correct = ( formattedAnswer === correctAnswer );
-                  break;
-
-              }
-
-              return correct;
-
-            },
-
-            isChoiceLiteral: function() {
-
-              return ( this.type === 'choiceLiteral' );
-
-            },
-
-            isText: function() {
-
-              return ( this.type === 'text' );
-
-            }
+            // The number of points this question contributes toward the student's score if 
+            // they answer it correctly.
+            value: 0
 
           };
 
-          // Return the final QuizQuestion object.
-          return angular.extend( defaults, properties );
+          // FUNCTIONS
+
+          function clearAnswer () {
+
+            merged.answer = null;
+
+          }
+
+          function clearResultData () {
+
+            merged.commentary = null;
+            merged.correctAnswer = null;
+            merged.isCorrect = null;
+
+          }
+
+          function getFormattedAnswer () {
+            
+            if ( !isAnswered() ) {
+              return "No answer";
+            }
+            else {
+              getFormattedChoice( merged.answer );
+            }
+
+          }
+
+          function getFormattedChoice ( index ) {
+
+            // FIXME: This is better implemented as a filter.
+            
+            if ( isChoiceLiteral() ) {
+              return merged.choices[ index ];
+            }
+            else if ( isChoice() ) {
+              // 65 is ASCII for 'A'
+              return String.fromCharCode( 65 + parseInt( index ) );
+            }
+            else {
+              return index;
+            }
+
+          }
+
+          function getFormattedCorrectAnswer () {
+
+            if ( !hasResultData() ) {
+              return "No answer";
+            }
+            else {
+              getFormattedChoice( merged.correctAnswer );
+            }
+
+          }
+
+          function hasCompetency () {
+
+            return ( merged.competency !== null );
+
+          }
+
+          function hasResultData () {
+
+            return ( merged.correctAnswer !== null && merged.commentary !== null );
+
+          }
+
+          function isAnswered () {
+
+            return ( merged.answer !== null );
+
+          }
+
+          function isChoice () {
+
+            return ( merged.type === 'choice' );
+
+          }
+
+          function isChoiceLiteral () {
+
+            return ( merged.type === 'choiceLiteral' );
+
+          }
+
+          function isText () {
+
+            return ( merged.type === 'text' );
+
+          }
+
+          // INIT
+
+          ( function init () {
+
+            // Merge the defaults with the custom implementation and the functions that are defined 
+            // above into a single object to represent the Quiz.
+            merged = angular.merge( 
+              defaults, 
+              question, 
+              {
+                clearAnswer: clearAnswer,
+                clearResultData: clearResultData,
+                getFormattedAnswer: getFormattedAnswer,
+                getFormattedChoice: getFormattedChoice, 
+                getFormattedCorrectAnswer: getFormattedCorrectAnswer,
+                hasCompetency: hasCompetency, 
+                hasResultData: hasResultData,
+                isAnswered: isAnswered,
+                isChoice: isChoice,
+                isChoiceLiteral: isChoiceLiteral,
+                isText: isText
+              } 
+            );
+
+          } )();
+
+          // Return the merged Question object.
+          return merged;
           
         };
 
@@ -614,150 +614,151 @@
 
       function () {
 
-        return function Quiz( properties ) {
+        return function Quiz( quiz ) {
+          
+          var merged = null;
 
+          // DEFAULTS
+          
           var defaults = {
-
-            // The name to be presented for this quiz.
-            name: '',
 
             // Any special instructions that should be presented at the start of this quiz.
             instructions: '',
 
-            // The expected maximum score that can be obtained on this quiz.
-            maxScore: 0,
-
-            // The student's score on the quiz. Computed by calling grade().
-            score: null,
-
-            // The academic references that this quiz should attribute.
-            references: [],
+            // The name to be presented for this quiz.
+            name: '',
 
             // The list of questions that make up the quiz.
-            questions: [],
-
-            // A list of competencies this quiz relates to.
-            competencies: [],
-
-            clear: function () {
-
-              // Set the score invalid.
-              this.score = null;
-
-              // Clear the scoring of each of the questions.
-              for ( var i = 0; i < this.questions.length; i += 1 ) {
-                this.questions[ i ].incomplete = false;
-                this.questions[ i ].answer = null;
-                this.questions[ i ].correct = null;
-              }
-
-            },
-
-            grade: function () {
-
-              // If this quiz has an invalid max score, then it shouldn't be graded.
-              if ( this.maxScore <= 0 ) {
-                return null;
-              }
-
-              // Initialize the score as 0.
-              this.score = 0;
-
-              // Add the question's value to the score if the student's answer was correct.
-              for ( var i = 0; i < this.questions.length; i += 1 ) {
-                var question = this.questions[ i ];
-                var correct = question.isCorrect();
-                this.score += ( correct ) ? question.value : 0;
-              }
-
-              return this.score;
-
-            },
-
-            getScoreFromAnswers: function( answers ) {
-
-              var score = 0;
-
-              for ( var i = 0; i < this.questions.length; i += 1 ) {
-                var question = this.questions[ i ];
-                var correct = question.isCorrectForAnswer( answers[ i ] );
-                score += ( correct ) ? question.value : 0;
-              }
-
-              return score;
-
-            },
-
-            getUnansweredQuestions: function() {
-
-              var questions = [];
-
-              for ( var i = 0; i < this.questions.length; i += 1 ) {
-                var question = this.questions[ i ];
-                if ( !question.isAnswered() ) {
-                  questions.push( question );
-                }
-              }
-
-              return questions;
-
-            },
-
-            // This function can be used to get a flat array of answers by scraping the values from each
-            // question. This is typically used for output of a user's answers to a database.
-            getAnswers: function () {
-
-              var answers = [];
-              for ( var i = 0; i < this.questions.length; i += 1 ) {
-                answers.push( this.questions[ i ].answer );
-              }
-
-              return answers;
-
-            },
-
-            // This function can be used to set the answer of each question by providing an array of
-            // answers that matches the number of questions in this quiz.
-            setAnswers: function ( answersArray ) {
-
-              if ( answersArray.length !== this.questions.length ) {
-                throw new Error( "The provided answers array is not the same size as the questions array!" );
-              }
-
-              for ( var i = 0; i < this.questions.length; i += 1 ) {
-                this.questions[ i ].answer = answersArray[ i ];
-              }
-
-            }
+            questions: []
 
           };
 
-          // Extend the defaults with the passed properties.
-          var extended = angular.extend( defaults, properties );
+          // FUNCTIONS
 
-          // Automatically construct the competencies from the questions.
-          for ( var i = 0; extended.questions.length; i += 1 ) {
-            
-            var question = extended.questions[ i ];
-            if ( typeof( question ) === 'undefined' ) {
-              break;
-            }
+          function clear () {
 
-            var competency = extended.questions[ i ].competency;
-            if ( competency === null || typeof( competency.key ) !== 'string' ) {
-              continue;
-            }
-
-            if ( typeof( extended.competencies[ competency.key ] ) === 'undefined' ) {
-              extended.competencies[ competency.key ] = [];
-            }
-
-            extended.competencies[ competency.key ].push( extended.questions[ i ] );
+            merged
+              .questions
+              .forEach( function ( question ) {
+                question.clear();
+              } );
 
           }
 
-          // Return the final Quiz object.
-          return extended;
+          function getAnswers () {
+
+            return merged
+              .questions
+              .map( function ( question ) {
+                return question.answer;
+              } );
+
+          }
+
+          function getCompetencies () {
+
+            merged
+              .questions
+              .filter( function ( question ) {
+                return question.hasCompetency();
+              } )
+              .map( function ( question ) {
+                return question.competency;
+              } )
+              .filter( function ( competency ) {
+                return !competency;
+              } )
+              .reduce( function ( competency, quizCompetencies ) {
+                // Merge all of the question competencies into one array.
+                return quizCompetencies.concat( competency );
+              } )
+              .filter( function ( competency, index, quizCompetencies ) {
+                // Eliminate all duplicate elements to ensure uniqueness.
+                return quizCompetencies.indexOf( competency ) === index;
+              } )
+              .sort( function ( a, b ) {
+                // Sort the results by key.
+                if ( a.key < b.key ) {
+                  return -1;
+                }
+                else if ( a.key > b.key ) {
+                  return 1;
+                }
+                else {
+                  return 0;
+                }
+              } );
+
+          }
+
+          function getMaxScore () {
+
+            return merged
+              .questions
+              .reduce( function ( question, sum ) {
+                return sum + question.value;
+              }, 0 );
+
+          }
+
+          function getScore () {
+
+            return merged
+              .questions
+              .reduce( function ( question, sum ) {
+                return sum + question.correct ? question.value : 0;
+              }, 0 );
+
+          }
+
+          function getUnansweredQuestions () {
+
+            return merged
+              .questions
+              .filter( function ( question ) {
+                return !question.isAnswered();
+              } );
+
+          }
+
+          function setAnswers ( answers ) {
+
+            if ( answers.length !== merged.questions.length ) {
+              throw new Error( "The provided answers array is not the same size as the questions array!" );
+            }
+
+            answers
+              .forEach( function ( answer, index ) {
+                var question = merged.questions[ index ];
+                question.answer = answer;
+              } );
+
+          }
+
+          // INIT
+
+          ( function init () {
+
+            // Merge the defaults with the custom implementation and the functions that are defined 
+            // above into a single object to represent the Quiz.
+            merged = angular.merge( 
+              defaults, 
+              quiz, 
+              {
+                clear: clear,
+                getAnswers: getAnswers,
+                getCompetencies: getCompetencies,
+                getMaxScore: getMaxScore,
+                getScore: getScore,
+                getUnansweredQuestions: getUnansweredQuestions,
+                setAnswers: setAnswers
+              } 
+            );
+
+          } )();
+
+          // Return the merged Quiz object.
+          return merged;
 
         };
 
@@ -793,6 +794,7 @@
 
           };
 
+          // Extend the defaults with the passed properties.
           return angular.merge( defaults, reference );
 
         };
@@ -888,7 +890,7 @@
             .forEach( function ( question ) {
               pretest.questions.push( question );
               pretest.maxScore += question.value;
-              if ( question.isCorrect() ) {
+              if ( question.isCorrect ) {
                 pretest.score += question.value;
               }
             } );
@@ -903,7 +905,7 @@
               .forEach( function ( question ) {
                 posttest.questions.push( question );
                 posttest.maxScore += question.value;
-                if ( question.isCorrect() ) {
+                if ( question.isCorrect ) {
                   posttest.score += question.value;
                 }
               } );

@@ -29,10 +29,26 @@
             $scope.testQuiz = $testQuiz;
             $scope.testModules = $testModules;
 
-            // Answer the questions and grade the quiz.
+            // Wait for a bit, then do stuff.
+            // "Answer" the questions.
             $testQuiz.questions[ 0 ].answer = 0;
-            $testQuiz.questions[ 0 ].answer = 1;
-            $testQuiz.grade();
+            $testQuiz.questions[ 1 ].answer = 0;
+
+            // Merge in answers "from the server" after grading is done.
+            angular.merge( $testQuiz, {
+              questions: [
+                {
+                  commentary: 'Yay!',
+                  correctAnswer: 0,
+                  isCorrect: true
+                },
+                {
+                  commentary: 'Well that went badly...',
+                  correctAnswer: 1,
+                  isCorrect: false
+                }
+              ]
+            } );
 
           } 
         ]
@@ -87,27 +103,21 @@
         score: null,
         questions: [
           Question( {
+            key: 0,
             number: 1,
             type: 'choiceLiteral',
             value: 1,
             text: 'Test question 1.',
             choices: [ 'True', 'False' ],
-            correctAnswer: 1,
-            answer: null,
-            correct: null,
-            commentary: 'Well that went badly...',
             competency: $testCompetencies[ "1" ]
           } ),
           Question( {
+            key: 1,
             number: 2,
             type: 'choiceLiteral',
             value: 1,
             text: 'Test question 2.',
             choices: [ 'True', 'False' ],
-            correctAnswer: 0,
-            answer: null,
-            correct: null,
-            commentary: 'Well that went badly...',
             competency: $testCompetencies[ "2" ]
           } )
         ]
@@ -136,8 +146,14 @@
               state: '/',
               transcriptUrl: '',
               actions: {
-                next: Action( '/', 'Next' ),
-                prev: Action( '/', 'Prev' )
+                next: Action( {
+                  sref: '/', 
+                  label: 'Next' 
+                } ),
+                prev: Action( {
+                  sref: '/', 
+                  label: 'Prev' 
+                } )
               }
             } ), 
             Page( {
@@ -147,8 +163,14 @@
               state: '/',
               transcriptUrl: '',
               actions: {
-                next: Action( '/', 'Next' ),
-                prev: Action( '/', 'Prev' )
+                next: Action( {
+                  sref: '/', 
+                  label: 'Next' 
+                } ),
+                prev: Action( {
+                  sref: '/', 
+                  label: 'Prev' 
+                } )
               }
             } )
           ]
@@ -168,8 +190,14 @@
               state: '/',
               transcriptUrl: '',
               actions: {
-                next: Action( '/', 'Next' ),
-                prev: Action( '/', 'Prev' )
+                next: Action( {
+                  sref: '/', 
+                  label: 'Next' 
+                } ),
+                prev: Action( {
+                  sref: '/', 
+                  label: 'Prev' 
+                } )
               }
             } ), 
             Page( {
@@ -179,8 +207,14 @@
               state: '/',
               transcriptUrl: '',
               actions: {
-                next: Action( '/', 'Next' ),
-                prev: Action( '/', 'Prev' )
+                next: Action( {
+                  sref: '/', 
+                  label: 'Next' 
+                } ),
+                prev: Action( {
+                  sref: '/', 
+                  label: 'Prev' 
+                } )
               }
             } )
           ]

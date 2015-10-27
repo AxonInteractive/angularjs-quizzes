@@ -1,4 +1,4 @@
-<div class="quiz-question" ng-class="{ 'incomplete': question.incomplete }">
+<div class="quiz-question" ng-class="{ 'incomplete': !question.isAnswered() }">
   <div class="question-text">
     <h3>&nbsp;{{ question.number }}. {{ question.text }}</h3>
     <ol class="sub-question-text">
@@ -11,7 +11,7 @@
     <textarea class="mc-sub-question-text form-control" ng-model="question.answer" ng-if="question.isText()"></textarea>
     <ol class="mc-sub-question-text" ng-if="!question.isText()">
       <li ng-repeat="choice in question.choices" >
-        <label for="question-{{ question.number }}-{{ $index }}" >{{ question.getChoice( $index )  }}</label>
+        <label for="question-{{ question.number }}-{{ $index }}" >{{ question.getFormattedChoice( $index )  }}</label>
         <br />
         <input ng-model="question.answer" value="{{ $index }}" name="question-{{ question.number }}" id="question-{{ question.number }}-{{ $index }}" type="radio" />
       </li>
