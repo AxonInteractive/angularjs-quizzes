@@ -10,13 +10,17 @@
         return {
 
           scope: {
-            'source': '='
+            'source': '=',
+            'highlight': '&'
           },
           restrict: 'AE',
           templateUrl: 'directives/quiz/quiz.html',
           link: function ( $scope, $elem, $attrs ) {
 
             // Nothing to do here.
+            
+            console.log( $scope.highlight );
+            console.log( $scope.highlight() );
 
           }
 

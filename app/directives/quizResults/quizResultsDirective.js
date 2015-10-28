@@ -2,26 +2,26 @@
 
   'use strict';
 
-  var app = angular.module( 'axon-angularjs-quizzes' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .directive( 'quizResults', [ 
+      function () {
 
-  app.directive( 'quizResults', [ 
-    function () {
+        return {
 
-      return {
+          scope: {
+            'source': '='
+          },
+          restrict: 'AE',
+          templateUrl: 'directives/quizResults/quizResults.html',
+          link: function ( $scope, $elem, $attrs ) {
 
-        scope: {
-          'source': '='
-        },
-        restrict: 'AE',
-        templateUrl: 'directives/quizResults/quizResults.html',
-        link: function ( $scope, $elem, $attrs ) {
+            // Nothing to do here.
 
-          // Nothing to do here.
+          }
 
-        }
+        };
 
-      };
-
-  } ] );
+    } ] );
 
 } )();

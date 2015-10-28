@@ -1,4 +1,4 @@
-/*! axon-angularjs-quizzes - v0.0.2 - 2015-10-27 */
+/*! axon-angularjs-quizzes - v0.0.2 - 2015-10-28 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // app.js /////////////////////////////////////////////////////////////////////////////////////////
@@ -42,10 +42,109 @@
         return {
 
           scope: {
-            'source': '='
+            'source': '=',
+            'highlight': '&'
           },
           restrict: 'AE',
           templateUrl: 'directives/quiz/quiz.html',
+          link: function ( $scope, $elem, $attrs ) {
+
+            // Nothing to do here.
+            
+            console.log( $scope.highlight );
+            console.log( $scope.highlight() );
+
+          }
+
+        };
+
+    } ] );
+
+} )();
+
+( function () {
+
+  'use strict';
+
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .directive( 'quizAnswer', [
+      '$sce', 
+      function ( $sce ) {
+
+        return {
+
+          scope: {
+            question: '='
+          },
+          restrict: 'AE',
+          templateUrl: 'directives/quizAnswer/quizAnswer.html',
+          link: function ( $scope, $elem, $attrs ) {
+
+            // Sanitize the commentary to produce working HTML.
+            $scope.sanitizedCommentary = $sce.trustAsHtml( $scope.question.commentary );
+
+          }
+
+        };
+
+    } ] );
+
+} )();
+
+( function () {
+
+  'use strict';
+
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .directive( 'quizQuestion', [
+      function () {
+
+        return {
+
+          scope: {
+            'question': '=',
+            'highlight': '&'
+          },
+          restrict: 'AE',
+          templateUrl: 'directives/quizQuestion/quizQuestion.html',
+          link: function ( $scope, $elem, $attrs ) {
+
+            $scope.markAsIncomplete = function () {
+              var showIncomplete = ( typeof( $scope.highlight ) === 'function' )
+                ? $scope.highlight()
+                : false;
+              return !$scope.question.isAnswered() && showIncomplete;
+            };
+              
+            console.log( $scope.highlight );
+            console.log( $scope.highlight() );
+
+         }
+
+        };
+
+    } ] );
+
+} )();
+
+( function () {
+
+  'use strict';
+
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .directive( 'quizResults', [ 
+      function () {
+
+        return {
+
+          scope: {
+            'source': '='
+          },
+          restrict: 'AE',
+          templateUrl: 'directives/quizResults/quizResults.html',
           link: function ( $scope, $elem, $attrs ) {
 
             // Nothing to do here.
@@ -62,145 +161,56 @@
 
   'use strict';
 
-  var app = angular.module( 'axon-angularjs-quizzes' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .directive( 'quizScorecard', [ 
+      'Scorecard',
+      function ( Scorecard ) {
 
-  app.directive( 'quizAnswer', [
-    '$sce', 
-    function ( $sce ) {
+        return {
 
-      return {
+          scope: {
+            "beforeSource": "=",
+            "afterSource": "=",
+            "modulesSource": "="
+          },
+          restrict: 'AE',
+          templateUrl: 'directives/quizScorecard/quizScorecard.html',
+          link: function ( $scope, $elem, $attrs ) {
 
-        scope: {
-          question: '='
-        },
-        restrict: 'AE',
-        templateUrl: 'directives/quizAnswer/quizAnswer.html',
-        link: function ( $scope, $elem, $attrs ) {
+            ///////////////////////
+            // Helper Functions //
+            /////////////////////
 
-          // Sanitize the commentary to produce working HTML.
-          $scope.sanitizedCommentary = $sce.trustAsHtml( $scope.question.commentary );
-
-        }
-
-      };
-
-  } ] );
-
-} )();
-
-( function () {
-
-  'use strict';
-
-  var app = angular.module( 'axon-angularjs-quizzes' );
-
-  app.directive( 'quizQuestion', [
-    function () {
-
-      return {
-
-        scope: {
-          'question': '='
-        },
-        restrict: 'AE',
-        templateUrl: 'directives/quizQuestion/quizQuestion.html',
-        link: function ( $scope, $elem, $attrs ) {
-
-          // Nothing to do here.
-
-       }
-
-      };
-
-  } ] );
-
-} )();
-
-( function () {
-
-  'use strict';
-
-  var app = angular.module( 'axon-angularjs-quizzes' );
-
-  app.directive( 'quizResults', [ 
-    function () {
-
-      return {
-
-        scope: {
-          'source': '='
-        },
-        restrict: 'AE',
-        templateUrl: 'directives/quizResults/quizResults.html',
-        link: function ( $scope, $elem, $attrs ) {
-
-          // Nothing to do here.
-
-        }
-
-      };
-
-  } ] );
-
-} )();
-
-( function () {
-
-  'use strict';
-
-  var app = angular.module( 'axon-angularjs-quizzes' );
-
-  app.directive( 'quizScorecard', [ 
-    'Scorecard',
-    function ( Scorecard ) {
-
-      return {
-
-        scope: {
-          "beforeSource": "=",
-          "afterSource": "=",
-          "modulesSource": "="
-        },
-        restrict: 'AE',
-        templateUrl: 'directives/quizScorecard/quizScorecard.html',
-        link: function ( $scope, $elem, $attrs ) {
-
-          ///////////////////////
-          // Helper Functions //
-          /////////////////////
-
-          // Returns a func that, when called, will yield the requested property from the provided
-          // source object. This is weird as hell, and I'm only using it to get
-          // angular-progress-arc to behave, since internall it CALLS the complete attribute passed
-          // to it as a function, and I'm grasping at straws as to how to make that work nicely.
-          $scope.getFn = function ( src ) {
-            //console.log( src );
-            return function () {
-              return src;
+            // Returns a func that, when called, will yield the requested property from the provided
+            // source object. This is weird as hell, and I'm only using it to get
+            // angular-progress-arc to behave, since internall it CALLS the complete attribute passed
+            // to it as a function, and I'm grasping at straws as to how to make that work nicely.
+            $scope.getFn = function ( src ) {
+              //console.log( src );
+              return function () {
+                return src;
+              };
             };
-          };
 
-          /////////////////////
-          // Initialization //
-          ///////////////////
+            /////////////////////
+            // Initialization //
+            ///////////////////
 
-          $scope.isSingleSource = !$scope.afterSource;
+            $scope.isSingleSource = !$scope.afterSource;
 
-          var scorecard = Scorecard( 
-            $scope.modulesSource, 
-            $scope.beforeSource, 
-            $scope.afterSource 
-          );
-          angular.extend( $scope, scorecard );
+            var scorecard = Scorecard( 
+              $scope.modulesSource, 
+              $scope.beforeSource, 
+              $scope.afterSource 
+            );
+            angular.extend( $scope, scorecard );
 
-          console.log( $scope.modules );
-          console.log( $scope.modules[ 0 ].competencies );
+          }
 
-        }
+        };
 
-      };
-
-  } ] );
+    } ] );
 
 } )();
 
@@ -208,40 +218,40 @@
 
   'use strict';
 
-  var app = angular.module( 'axon-angularjs-quizzes' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .directive( 'quizScorecardQuestion', [ 
+      '$modal',
+      function ( $modal ) {
 
-  app.directive( 'quizScorecardQuestion', [ 
-    '$modal',
-    function ( $modal ) {
+        return {
 
-      return {
+          scope: {
+            "question": "="
+          },
+          restrict: 'AE',
+          templateUrl: 'directives/quizScorecardQuestion/quizScorecardQuestion.html',
+          link: function ( $scope, $elem, $attrs ) {
 
-        scope: {
-          "question": "="
-        },
-        restrict: 'AE',
-        templateUrl: 'directives/quizScorecardQuestion/quizScorecardQuestion.html',
-        link: function ( $scope, $elem, $attrs ) {
-
-          $scope.onButtonClicked = function () {
-            $modal.open( {
-                templateUrl: 'views/__Modals/QuizAnswerModal/QuizAnswerModal.html',
-                controller: 'QuizAnswerModalController',
-                resolve: {
-                  '$modalArgs': function () {
-                    return {
-                      question: $scope.question
-                    };
+            $scope.onButtonClicked = function () {
+              $modal.open( {
+                  templateUrl: 'views/QuizAnswerModal/QuizAnswerModal.html',
+                  controller: 'QuizAnswerModalController',
+                  resolve: {
+                    '$modalArgs': function () {
+                      return {
+                        question: $scope.question
+                      };
+                    }
                   }
-                }
-            } );
-          };
+              } );
+            };
 
-        }
+          }
 
-      };
+        };
 
-  } ] );
+    } ] );
 
 } )();
 
@@ -417,7 +427,7 @@
 
         return function Question( question ) {
 
-          var merged = null;
+          var merged = {};
 
           // CONSTANTS
 
@@ -497,10 +507,10 @@
           function getFormattedAnswer () {
             
             if ( !isAnswered() ) {
-              return "No answer";
+              return "No Answer";
             }
             else {
-              getFormattedChoice( merged.answer );
+              return getFormattedChoice( merged.answer );
             }
 
           }
@@ -508,9 +518,9 @@
           function getFormattedChoice ( index ) {
 
             // FIXME: This is better implemented as a filter.
-            
+
             if ( isChoiceLiteral() ) {
-              return merged.choices[ index ];
+              return merged.choices[ parseInt( index ) ];
             }
             else if ( isChoice() ) {
               // 65 is ASCII for 'A'
@@ -525,10 +535,10 @@
           function getFormattedCorrectAnswer () {
 
             if ( !hasResultData() ) {
-              return "No answer";
+              return "No Answer";
             }
             else {
-              getFormattedChoice( merged.correctAnswer );
+              return getFormattedChoice( merged.correctAnswer );
             }
 
           }
@@ -541,7 +551,7 @@
 
           function hasResultData () {
 
-            return ( merged.correctAnswer !== null && merged.commentary !== null );
+            return ( merged.correctAnswer !== null );
 
           }
 
@@ -575,7 +585,8 @@
 
             // Merge the defaults with the custom implementation and the functions that are defined 
             // above into a single object to represent the Quiz.
-            merged = angular.merge( 
+            angular.extend( 
+              merged, 
               defaults, 
               question, 
               {
@@ -616,7 +627,7 @@
 
         return function Quiz( quiz ) {
           
-          var merged = null;
+          var merged = {};
 
           // DEFAULTS
           
@@ -741,7 +752,8 @@
 
             // Merge the defaults with the custom implementation and the functions that are defined 
             // above into a single object to represent the Quiz.
-            merged = angular.merge( 
+            angular.extend( 
+              merged, 
               defaults, 
               quiz, 
               {
@@ -995,56 +1007,56 @@
 
   'use strict';
 
-  var app = angular.module( 'axon-angularjs-quizzes' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .controller( 'KTPlanEditModalController', [
+      '$scope', '$state', '$modalInstance', '$modalArgs', 
+      function ( $scope, $state, $modalInstance, $modalArgs ) {
 
-  app.controller( 'KTPlanEditModalController', [
-    '$scope', '$state', '$modalInstance', '$modalArgs', 
-    function ( $scope, $state, $modalInstance, $modalArgs ) {
+        /////////////////////
+        // Event Handlers //
+        ///////////////////
 
-      /////////////////////
-      // Event Handlers //
-      ///////////////////
+        $scope.onOkayButtonClicked = function () {
 
-      $scope.onOkayButtonClicked = function () {
+          if ( typeof $modalArgs.onOkayButtonClicked !== 'function' ) {
+            $modalInstance.close();
+            return;
+          }
 
-        if ( typeof $modalArgs.onOkayButtonClicked !== 'function' ) {
-          $modalInstance.close();
-          return;
-        }
+          $modalArgs.onOkayButtonClicked( $modalInstance );
 
-        $modalArgs.onOkayButtonClicked( $modalInstance );
+        };
 
-      };
+        $scope.onCancelButtonClicked = function() {
 
-      $scope.onCancelButtonClicked = function() {
+          if ( typeof $modalArgs.onCancelButtonClicked !== 'function' ) {
+            $modalInstance.close();
+            return;
+          }
 
-        if ( typeof $modalArgs.onCancelButtonClicked !== 'function' ) {
-          $modalInstance.close();
-          return;
-        }
+          $modalArgs.onCancelButtonClicked( $modalInstance );
 
-        $modalArgs.onCancelButtonClicked( $modalInstance );
+        };
 
-      };
+        /////////////////////
+        // Initialization //
+        ///////////////////
 
-      /////////////////////
-      // Initialization //
-      ///////////////////
+        ( function init() {
 
-      ( function init() {
+          if ( typeof $modalArgs === 'undefined' ) {
+            $modalArgs = {};
+          }
 
-        if ( typeof $modalArgs === 'undefined' ) {
-          $modalArgs = {};
-        }
+          // Place the important stuff onto the scope.
+          $scope.module = $modalArgs.module;
+          $scope.competency = $modalArgs.competency;
+          $scope.competencyNum = $modalArgs.competencyNum;
 
-        // Place the important stuff onto the scope.
-        $scope.module = $modalArgs.module;
-        $scope.competency = $modalArgs.competency;
-        $scope.competencyNum = $modalArgs.competencyNum;
+        } )();
 
-      } )();
-
-  } ] );
+    } ] );
 
 } )();
 
@@ -1052,35 +1064,71 @@
 
   'use strict';
 
-  var app = angular.module( 'axon-angularjs-quizzes' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .controller( 'QuizAnswerModalController', [
+      '$scope', '$modalInstance', '$modalArgs', 
+      function ( $scope, $modalInstance, $modalArgs ) {
 
-  app.controller( 'ReferenceModalController', [
-    '$scope', '$modalInstance', '$modalArgs', '$window', 
-    function ( $scope, $modalInstance, $modalArgs, $window ) {
+        /////////////////////
+        // Event Handlers //
+        ///////////////////
 
-      /////////////////////
-      // Event Handlers //
-      ///////////////////
+        $scope.onCloseButtonClicked = function () {
+          $modalInstance.close();
+        };
 
-      $scope.onDownloadPdfButtonClicked = function () {
-        $window.open( $scope.reference.url );
-      };
+        /////////////////////
+        // Initialization //
+        ///////////////////
 
-      $scope.onCloseButtonClicked = function() {
-        $modalInstance.close();
-      };
+        ( function init() {
 
-      /////////////////////
-      // Initialization //
-      ///////////////////
+          if ( typeof $modalArgs === 'undefined' ) {
+            $modalArgs = {};
+          }
 
-      ( function init() {
-        
-        // Place the title and message onto the $scope so they can be templated.
-        $scope.reference = $modalArgs.reference;
+          $scope.question = $modalArgs.question;
 
-      } )();
+        } )();
 
-  } ] );
+    } ] );
+
+} )();
+
+( function () {
+
+  'use strict';
+
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .controller( 'ReferenceModalController', [
+      '$scope', '$modalInstance', '$modalArgs', '$window', 
+      function ( $scope, $modalInstance, $modalArgs, $window ) {
+
+        /////////////////////
+        // Event Handlers //
+        ///////////////////
+
+        $scope.onDownloadPdfButtonClicked = function () {
+          $window.open( $scope.reference.url );
+        };
+
+        $scope.onCloseButtonClicked = function() {
+          $modalInstance.close();
+        };
+
+        /////////////////////
+        // Initialization //
+        ///////////////////
+
+        ( function init() {
+          
+          // Place the title and message onto the $scope so they can be templated.
+          $scope.reference = $modalArgs.reference;
+
+        } )();
+
+    } ] );
 
 } )();

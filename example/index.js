@@ -31,11 +31,11 @@
 
             // Wait for a bit, then do stuff.
             // "Answer" the questions.
-            $testQuiz.questions[ 0 ].answer = 0;
-            $testQuiz.questions[ 1 ].answer = 0;
+            $scope.testQuiz.questions[ 0 ].answer = 0;
+            //$scope.testQuiz.questions[ 1 ].answer = 0;
 
             // Merge in answers "from the server" after grading is done.
-            angular.merge( $testQuiz, {
+            angular.merge( $scope.testQuiz, {
               questions: [
                 {
                   commentary: 'Yay!',
@@ -49,6 +49,10 @@
                 }
               ]
             } );
+
+            $scope.wasSubmitAttempted = function () {
+              return true;
+            };
 
           } 
         ]

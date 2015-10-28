@@ -2,35 +2,35 @@
 
   'use strict';
 
-  var app = angular.module( 'axon-angularjs-quizzes' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .controller( 'ReferenceModalController', [
+      '$scope', '$modalInstance', '$modalArgs', '$window', 
+      function ( $scope, $modalInstance, $modalArgs, $window ) {
 
-  app.controller( 'ReferenceModalController', [
-    '$scope', '$modalInstance', '$modalArgs', '$window', 
-    function ( $scope, $modalInstance, $modalArgs, $window ) {
+        /////////////////////
+        // Event Handlers //
+        ///////////////////
 
-      /////////////////////
-      // Event Handlers //
-      ///////////////////
+        $scope.onDownloadPdfButtonClicked = function () {
+          $window.open( $scope.reference.url );
+        };
 
-      $scope.onDownloadPdfButtonClicked = function () {
-        $window.open( $scope.reference.url );
-      };
+        $scope.onCloseButtonClicked = function() {
+          $modalInstance.close();
+        };
 
-      $scope.onCloseButtonClicked = function() {
-        $modalInstance.close();
-      };
+        /////////////////////
+        // Initialization //
+        ///////////////////
 
-      /////////////////////
-      // Initialization //
-      ///////////////////
+        ( function init() {
+          
+          // Place the title and message onto the $scope so they can be templated.
+          $scope.reference = $modalArgs.reference;
 
-      ( function init() {
-        
-        // Place the title and message onto the $scope so they can be templated.
-        $scope.reference = $modalArgs.reference;
+        } )();
 
-      } )();
-
-  } ] );
+    } ] );
 
 } )();

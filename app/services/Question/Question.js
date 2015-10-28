@@ -10,7 +10,7 @@
 
         return function Question( question ) {
 
-          var merged = null;
+          var merged = {};
 
           // CONSTANTS
 
@@ -90,10 +90,10 @@
           function getFormattedAnswer () {
             
             if ( !isAnswered() ) {
-              return "No answer";
+              return "No Answer";
             }
             else {
-              getFormattedChoice( merged.answer );
+              return getFormattedChoice( merged.answer );
             }
 
           }
@@ -101,9 +101,9 @@
           function getFormattedChoice ( index ) {
 
             // FIXME: This is better implemented as a filter.
-            
+
             if ( isChoiceLiteral() ) {
-              return merged.choices[ index ];
+              return merged.choices[ parseInt( index ) ];
             }
             else if ( isChoice() ) {
               // 65 is ASCII for 'A'
@@ -118,10 +118,10 @@
           function getFormattedCorrectAnswer () {
 
             if ( !hasResultData() ) {
-              return "No answer";
+              return "No Answer";
             }
             else {
-              getFormattedChoice( merged.correctAnswer );
+              return getFormattedChoice( merged.correctAnswer );
             }
 
           }
@@ -134,7 +134,7 @@
 
           function hasResultData () {
 
-            return ( merged.correctAnswer !== null && merged.commentary !== null );
+            return ( merged.correctAnswer !== null );
 
           }
 
@@ -168,7 +168,8 @@
 
             // Merge the defaults with the custom implementation and the functions that are defined 
             // above into a single object to represent the Quiz.
-            merged = angular.merge( 
+            angular.extend( 
+              merged, 
               defaults, 
               question, 
               {

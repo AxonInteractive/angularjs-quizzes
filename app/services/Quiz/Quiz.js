@@ -10,7 +10,7 @@
 
         return function Quiz( quiz ) {
           
-          var merged = null;
+          var merged = {};
 
           // DEFAULTS
           
@@ -135,7 +135,8 @@
 
             // Merge the defaults with the custom implementation and the functions that are defined 
             // above into a single object to represent the Quiz.
-            merged = angular.merge( 
+            angular.extend( 
+              merged, 
               defaults, 
               quiz, 
               {

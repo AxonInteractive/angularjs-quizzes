@@ -2,26 +2,35 @@
 
   'use strict';
 
-  var app = angular.module( 'axon-angularjs-quizzes' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .directive( 'quizQuestion', [
+      function () {
 
-  app.directive( 'quizQuestion', [
-    function () {
+        return {
 
-      return {
+          scope: {
+            'question': '=',
+            'highlight': '&'
+          },
+          restrict: 'AE',
+          templateUrl: 'directives/quizQuestion/quizQuestion.html',
+          link: function ( $scope, $elem, $attrs ) {
 
-        scope: {
-          'question': '='
-        },
-        restrict: 'AE',
-        templateUrl: 'directives/quizQuestion/quizQuestion.html',
-        link: function ( $scope, $elem, $attrs ) {
+            $scope.markAsIncomplete = function () {
+              var showIncomplete = ( typeof( $scope.highlight ) === 'function' )
+                ? $scope.highlight()
+                : false;
+              return !$scope.question.isAnswered() && showIncomplete;
+            };
+              
+            console.log( $scope.highlight );
+            console.log( $scope.highlight() );
 
-          // Nothing to do here.
+         }
 
-       }
+        };
 
-      };
-
-  } ] );
+    } ] );
 
 } )();

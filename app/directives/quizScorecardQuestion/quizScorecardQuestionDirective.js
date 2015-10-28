@@ -2,39 +2,39 @@
 
   'use strict';
 
-  var app = angular.module( 'axon-angularjs-quizzes' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .directive( 'quizScorecardQuestion', [ 
+      '$modal',
+      function ( $modal ) {
 
-  app.directive( 'quizScorecardQuestion', [ 
-    '$modal',
-    function ( $modal ) {
+        return {
 
-      return {
+          scope: {
+            "question": "="
+          },
+          restrict: 'AE',
+          templateUrl: 'directives/quizScorecardQuestion/quizScorecardQuestion.html',
+          link: function ( $scope, $elem, $attrs ) {
 
-        scope: {
-          "question": "="
-        },
-        restrict: 'AE',
-        templateUrl: 'directives/quizScorecardQuestion/quizScorecardQuestion.html',
-        link: function ( $scope, $elem, $attrs ) {
-
-          $scope.onButtonClicked = function () {
-            $modal.open( {
-                templateUrl: 'views/__Modals/QuizAnswerModal/QuizAnswerModal.html',
-                controller: 'QuizAnswerModalController',
-                resolve: {
-                  '$modalArgs': function () {
-                    return {
-                      question: $scope.question
-                    };
+            $scope.onButtonClicked = function () {
+              $modal.open( {
+                  templateUrl: 'views/QuizAnswerModal/QuizAnswerModal.html',
+                  controller: 'QuizAnswerModalController',
+                  resolve: {
+                    '$modalArgs': function () {
+                      return {
+                        question: $scope.question
+                      };
+                    }
                   }
-                }
-            } );
-          };
+              } );
+            };
 
-        }
+          }
 
-      };
+        };
 
-  } ] );
+    } ] );
 
 } )();

@@ -2,55 +2,55 @@
 
   'use strict';
 
-  var app = angular.module( 'axon-angularjs-quizzes' );
+  angular
+    .module( 'axon-angularjs-quizzes' )
+    .controller( 'KTPlanEditModalController', [
+      '$scope', '$state', '$modalInstance', '$modalArgs', 
+      function ( $scope, $state, $modalInstance, $modalArgs ) {
 
-  app.controller( 'KTPlanEditModalController', [
-    '$scope', '$state', '$modalInstance', '$modalArgs', 
-    function ( $scope, $state, $modalInstance, $modalArgs ) {
+        /////////////////////
+        // Event Handlers //
+        ///////////////////
 
-      /////////////////////
-      // Event Handlers //
-      ///////////////////
+        $scope.onOkayButtonClicked = function () {
 
-      $scope.onOkayButtonClicked = function () {
+          if ( typeof $modalArgs.onOkayButtonClicked !== 'function' ) {
+            $modalInstance.close();
+            return;
+          }
 
-        if ( typeof $modalArgs.onOkayButtonClicked !== 'function' ) {
-          $modalInstance.close();
-          return;
-        }
+          $modalArgs.onOkayButtonClicked( $modalInstance );
 
-        $modalArgs.onOkayButtonClicked( $modalInstance );
+        };
 
-      };
+        $scope.onCancelButtonClicked = function() {
 
-      $scope.onCancelButtonClicked = function() {
+          if ( typeof $modalArgs.onCancelButtonClicked !== 'function' ) {
+            $modalInstance.close();
+            return;
+          }
 
-        if ( typeof $modalArgs.onCancelButtonClicked !== 'function' ) {
-          $modalInstance.close();
-          return;
-        }
+          $modalArgs.onCancelButtonClicked( $modalInstance );
 
-        $modalArgs.onCancelButtonClicked( $modalInstance );
+        };
 
-      };
+        /////////////////////
+        // Initialization //
+        ///////////////////
 
-      /////////////////////
-      // Initialization //
-      ///////////////////
+        ( function init() {
 
-      ( function init() {
+          if ( typeof $modalArgs === 'undefined' ) {
+            $modalArgs = {};
+          }
 
-        if ( typeof $modalArgs === 'undefined' ) {
-          $modalArgs = {};
-        }
+          // Place the important stuff onto the scope.
+          $scope.module = $modalArgs.module;
+          $scope.competency = $modalArgs.competency;
+          $scope.competencyNum = $modalArgs.competencyNum;
 
-        // Place the important stuff onto the scope.
-        $scope.module = $modalArgs.module;
-        $scope.competency = $modalArgs.competency;
-        $scope.competencyNum = $modalArgs.competencyNum;
+        } )();
 
-      } )();
-
-  } ] );
+    } ] );
 
 } )();
