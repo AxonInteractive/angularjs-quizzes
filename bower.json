@@ -1,6 +1,6 @@
 {
   "name": "axon-angularjs-quizzes",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A collection of angular utilities for creating pretests, posttests and comparative scorecards.",
   "authors": [
     {
