@@ -1,6 +1,6 @@
 {
   "name": "axon-angularjs-quizzes",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A collection of angular utilities for creating pretests, posttests and comparative scorecards.",
   "contributors": [
     {
@@ -13,7 +13,7 @@
     },
     {
       "name": "James Zinger",
-      "email": "dev@jameszinger.com"
+      "email": "joey.zinger.99@gmail.com"
     }
   ],
   "homepage": "https://github.com/AxonInteractive/angularjs-quizzes",
