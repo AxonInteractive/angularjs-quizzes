@@ -4,7 +4,7 @@
 
   angular
     .module( 'axon-angularjs-quizzes' )
-    .directive( 'quiz', [ 
+    .directive( 'quiz', [
       function () {
 
         return {
@@ -18,10 +18,6 @@
           link: function ( $scope, $elem, $attrs ) {
 
             // Nothing to do here.
-            
-            console.log( $scope.highlight );
-            console.log( $scope.highlight() );
-
           }
 
         };

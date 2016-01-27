@@ -1,4 +1,4 @@
-/*! axon-angularjs-quizzes - v0.0.2 - 2015-10-28 */
+/*! axon-angularjs-quizzes - v0.0.3 - 2016-01-27 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // app.js /////////////////////////////////////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@
 
   angular
     .module( 'axon-angularjs-quizzes' )
-    .directive( 'quiz', [ 
+    .directive( 'quiz', [
       function () {
 
         return {
@@ -50,10 +50,6 @@
           link: function ( $scope, $elem, $attrs ) {
 
             // Nothing to do here.
-            
-            console.log( $scope.highlight );
-            console.log( $scope.highlight() );
-
           }
 
         };
@@ -431,22 +427,22 @@
 
           // CONSTANTS
 
-          // Multiple choice questions where the student picks an option from the choices array but 
+          // Multiple choice questions where the student picks an option from the choices array but
           // is displayed in a literal form for results
           var TYPE_CHOICE = 'choice';
 
           // True/False questions where the student picks an option from the choices array.
           var TYPE_CHOICE_LITERAL = 'choiceLiteral';
 
-          // Short-Answer questions and potentially numeric answers expected to be an exact string 
+          // Short-Answer questions and potentially numeric answers expected to be an exact string
           // match of the correct answer.
           var TYPE_TEXT = 'text';
 
           // DEFAULTS
-          
+
           var defaults = {
 
-            // The student's answer to this question. This will be set when a quiz is submitted 
+            // The student's answer to this question. This will be set when a quiz is submitted
             // by the student, using the setAnswers() function.
             answer: null,
 
@@ -455,14 +451,14 @@
             // responses to match the student's answer against.
             choices: [],
 
-            // Text to be presented to the student after the quiz is completed that justifies 
+            // Text to be presented to the student after the quiz is completed that justifies
             // the correct answer for the question and provides further background.
             commentary: null,
 
             // The Competency object with which this question is associated.
             competency: null,
 
-            // The array index of the correct choice within the list of choices above or a 
+            // The array index of the correct choice within the list of choices above or a
             // string that represents the correct answer (must be an exact match).
             correctAnswer: null,
 
@@ -478,11 +474,11 @@
             // The question text.
             text: '',
 
-            // The format to present the question as and how to interpret answers. See the 
+            // The format to present the question as and how to interpret answers. See the
             // constants above for the complete list of available types.
             type: TYPE_CHOICE,
 
-            // The number of points this question contributes toward the student's score if 
+            // The number of points this question contributes toward the student's score if
             // they answer it correctly.
             value: 0
 
@@ -505,7 +501,7 @@
           }
 
           function getFormattedAnswer () {
-            
+
             if ( !isAnswered() ) {
               return "No Answer";
             }
@@ -563,19 +559,19 @@
 
           function isChoice () {
 
-            return ( merged.type === 'choice' );
+            return ( merged.type === TYPE_CHOICE );
 
           }
 
           function isChoiceLiteral () {
 
-            return ( merged.type === 'choiceLiteral' );
+            return ( merged.type === TYPE_CHOICE_LITERAL );
 
           }
 
           function isText () {
 
-            return ( merged.type === 'text' );
+            return ( merged.type === TYPE_TEXT );
 
           }
 
@@ -583,32 +579,32 @@
 
           ( function init () {
 
-            // Merge the defaults with the custom implementation and the functions that are defined 
+            // Merge the defaults with the custom implementation and the functions that are defined
             // above into a single object to represent the Quiz.
-            angular.extend( 
-              merged, 
-              defaults, 
-              question, 
+            angular.extend(
+              merged,
+              defaults,
+              question,
               {
                 clearAnswer: clearAnswer,
                 clearResultData: clearResultData,
                 getFormattedAnswer: getFormattedAnswer,
-                getFormattedChoice: getFormattedChoice, 
+                getFormattedChoice: getFormattedChoice,
                 getFormattedCorrectAnswer: getFormattedCorrectAnswer,
-                hasCompetency: hasCompetency, 
+                hasCompetency: hasCompetency,
                 hasResultData: hasResultData,
                 isAnswered: isAnswered,
                 isChoice: isChoice,
                 isChoiceLiteral: isChoiceLiteral,
                 isText: isText
-              } 
+              }
             );
 
           } )();
 
           // Return the merged Question object.
           return merged;
-          
+
         };
 
     } ] );
@@ -622,15 +618,15 @@
   angular
     .module( 'axon-angularjs-quizzes' )
     .factory( 'Quiz', [
-
-      function () {
+      'Question',
+      function ( Question ) {
 
         return function Quiz( quiz ) {
-          
+
           var merged = {};
 
           // DEFAULTS
-          
+
           var defaults = {
 
             // Any special instructions that should be presented at the start of this quiz.
@@ -750,12 +746,12 @@
 
           ( function init () {
 
-            // Merge the defaults with the custom implementation and the functions that are defined 
+            // Merge the defaults with the custom implementation and the functions that are defined
             // above into a single object to represent the Quiz.
-            angular.extend( 
-              merged, 
-              defaults, 
-              quiz, 
+            angular.extend(
+              merged,
+              defaults,
+              quiz,
               {
                 clear: clear,
                 getAnswers: getAnswers,
@@ -764,9 +760,13 @@
                 getScore: getScore,
                 getUnansweredQuestions: getUnansweredQuestions,
                 setAnswers: setAnswers
-              } 
+              }
             );
 
+
+            merged = merged.questions.map( function( item ) {
+              return Question( item );
+            } );
           } )();
 
           // Return the merged Quiz object.

@@ -5,15 +5,15 @@
   angular
     .module( 'axon-angularjs-quizzes' )
     .factory( 'Quiz', [
-
-      function () {
+      'Question',
+      function ( Question ) {
 
         return function Quiz( quiz ) {
-          
+
           var merged = {};
 
           // DEFAULTS
-          
+
           var defaults = {
 
             // Any special instructions that should be presented at the start of this quiz.
@@ -133,12 +133,12 @@
 
           ( function init () {
 
-            // Merge the defaults with the custom implementation and the functions that are defined 
+            // Merge the defaults with the custom implementation and the functions that are defined
             // above into a single object to represent the Quiz.
-            angular.extend( 
-              merged, 
-              defaults, 
-              quiz, 
+            angular.extend(
+              merged,
+              defaults,
+              quiz,
               {
                 clear: clear,
                 getAnswers: getAnswers,
@@ -147,9 +147,13 @@
                 getScore: getScore,
                 getUnansweredQuestions: getUnansweredQuestions,
                 setAnswers: setAnswers
-              } 
+              }
             );
 
+
+            merged = merged.questions.map( function( item ) {
+              return Question( item );
+            } );
           } )();
 
           // Return the merged Quiz object.
