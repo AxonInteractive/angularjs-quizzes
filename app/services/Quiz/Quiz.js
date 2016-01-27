@@ -151,7 +151,7 @@
             );
 
 
-            merged = merged.questions.map( function( item ) {
+            merged.questions = merged.questions.map( function( item ) {
               return Question( item );
             } );
           } )();

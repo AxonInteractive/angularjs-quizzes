@@ -1,4 +1,4 @@
-/*! axon-angularjs-quizzes - v0.0.3 - 2016-01-27 */
+/*! axon-angularjs-quizzes - v0.0.4 - 2016-01-27 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // app.js /////////////////////////////////////////////////////////////////////////////////////////
@@ -764,7 +764,7 @@
             );
 
 
-            merged = merged.questions.map( function( item ) {
+            merged.questions = merged.questions.map( function( item ) {
               return Question( item );
             } );
           } )();
