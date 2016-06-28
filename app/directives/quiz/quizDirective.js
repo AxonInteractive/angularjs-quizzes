@@ -14,7 +14,7 @@
             'highlight': '&'
           },
           restrict: 'AE',
-          templateUrl: 'directives/quiz/quiz.html',
+          templateUrl: '/directives/quiz/quiz.html',
           link: function ( $scope, $elem, $attrs ) {
 
             // Nothing to do here.

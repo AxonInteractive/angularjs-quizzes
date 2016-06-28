@@ -5,7 +5,7 @@
   angular
     .module( 'axon-angularjs-quizzes' )
     .directive( 'quizAnswer', [
-      '$sce', 
+      '$sce',
       function ( $sce ) {
 
         return {
@@ -14,7 +14,7 @@
             question: '='
           },
           restrict: 'AE',
-          templateUrl: 'directives/quizAnswer/quizAnswer.html',
+          templateUrl: '/directives/quizAnswer/quizAnswer.html',
           link: function ( $scope, $elem, $attrs ) {
 
             // Sanitize the commentary to produce working HTML.

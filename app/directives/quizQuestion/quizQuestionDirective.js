@@ -14,7 +14,7 @@
             'highlight': '&'
           },
           restrict: 'AE',
-          templateUrl: 'directives/quizQuestion/quizQuestion.html',
+          templateUrl: '/directives/quizQuestion/quizQuestion.html',
           link: function ( $scope, $elem, $attrs ) {
 
             $scope.markAsIncomplete = function () {
@@ -23,7 +23,7 @@
                 : false;
               return !$scope.question.isAnswered() && showIncomplete;
             };
-              
+
             console.log( $scope.highlight );
             console.log( $scope.highlight() );
 

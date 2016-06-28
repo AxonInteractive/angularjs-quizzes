@@ -4,7 +4,7 @@
 
   angular
     .module( 'axon-angularjs-quizzes' )
-    .directive( 'quizScorecardQuestion', [ 
+    .directive( 'quizScorecardQuestion', [
       '$modal',
       function ( $modal ) {
 
@@ -14,7 +14,7 @@
             "question": "="
           },
           restrict: 'AE',
-          templateUrl: 'directives/quizScorecardQuestion/quizScorecardQuestion.html',
+          templateUrl: '/directives/quizScorecardQuestion/quizScorecardQuestion.html',
           link: function ( $scope, $elem, $attrs ) {
 
             $scope.onButtonClicked = function () {

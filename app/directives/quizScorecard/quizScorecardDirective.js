@@ -4,7 +4,7 @@
 
   angular
     .module( 'axon-angularjs-quizzes' )
-    .directive( 'quizScorecard', [ 
+    .directive( 'quizScorecard', [
       'Scorecard',
       function ( Scorecard ) {
 
@@ -16,7 +16,7 @@
             "modulesSource": "="
           },
           restrict: 'AE',
-          templateUrl: 'directives/quizScorecard/quizScorecard.html',
+          templateUrl: '/directives/quizScorecard/quizScorecard.html',
           link: function ( $scope, $elem, $attrs ) {
 
             ///////////////////////
@@ -40,10 +40,10 @@
 
             $scope.isSingleSource = !$scope.afterSource;
 
-            var scorecard = Scorecard( 
-              $scope.modulesSource, 
-              $scope.beforeSource, 
-              $scope.afterSource 
+            var scorecard = Scorecard(
+              $scope.modulesSource,
+              $scope.beforeSource,
+              $scope.afterSource
             );
             angular.extend( $scope, scorecard );
 

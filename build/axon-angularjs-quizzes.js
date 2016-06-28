@@ -1,4 +1,4 @@
-/*! axon-angularjs-quizzes - v0.0.4 - 2016-01-27 */
+/*! axon-angularjs-quizzes - v0.0.5 - 2016-06-28 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // app.js /////////////////////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,7 @@
             'highlight': '&'
           },
           restrict: 'AE',
-          templateUrl: 'directives/quiz/quiz.html',
+          templateUrl: '/directives/quiz/quiz.html',
           link: function ( $scope, $elem, $attrs ) {
 
             // Nothing to do here.
@@ -65,7 +65,7 @@
   angular
     .module( 'axon-angularjs-quizzes' )
     .directive( 'quizAnswer', [
-      '$sce', 
+      '$sce',
       function ( $sce ) {
 
         return {
@@ -74,7 +74,7 @@
             question: '='
           },
           restrict: 'AE',
-          templateUrl: 'directives/quizAnswer/quizAnswer.html',
+          templateUrl: '/directives/quizAnswer/quizAnswer.html',
           link: function ( $scope, $elem, $attrs ) {
 
             // Sanitize the commentary to produce working HTML.
@@ -104,7 +104,7 @@
             'highlight': '&'
           },
           restrict: 'AE',
-          templateUrl: 'directives/quizQuestion/quizQuestion.html',
+          templateUrl: '/directives/quizQuestion/quizQuestion.html',
           link: function ( $scope, $elem, $attrs ) {
 
             $scope.markAsIncomplete = function () {
@@ -113,7 +113,7 @@
                 : false;
               return !$scope.question.isAnswered() && showIncomplete;
             };
-              
+
             console.log( $scope.highlight );
             console.log( $scope.highlight() );
 
@@ -159,7 +159,7 @@
 
   angular
     .module( 'axon-angularjs-quizzes' )
-    .directive( 'quizScorecard', [ 
+    .directive( 'quizScorecard', [
       'Scorecard',
       function ( Scorecard ) {
 
@@ -171,7 +171,7 @@
             "modulesSource": "="
           },
           restrict: 'AE',
-          templateUrl: 'directives/quizScorecard/quizScorecard.html',
+          templateUrl: '/directives/quizScorecard/quizScorecard.html',
           link: function ( $scope, $elem, $attrs ) {
 
             ///////////////////////
@@ -195,10 +195,10 @@
 
             $scope.isSingleSource = !$scope.afterSource;
 
-            var scorecard = Scorecard( 
-              $scope.modulesSource, 
-              $scope.beforeSource, 
-              $scope.afterSource 
+            var scorecard = Scorecard(
+              $scope.modulesSource,
+              $scope.beforeSource,
+              $scope.afterSource
             );
             angular.extend( $scope, scorecard );
 
@@ -216,7 +216,7 @@
 
   angular
     .module( 'axon-angularjs-quizzes' )
-    .directive( 'quizScorecardQuestion', [ 
+    .directive( 'quizScorecardQuestion', [
       '$modal',
       function ( $modal ) {
 
@@ -226,7 +226,7 @@
             "question": "="
           },
           restrict: 'AE',
-          templateUrl: 'directives/quizScorecardQuestion/quizScorecardQuestion.html',
+          templateUrl: '/directives/quizScorecardQuestion/quizScorecardQuestion.html',
           link: function ( $scope, $elem, $attrs ) {
 
             $scope.onButtonClicked = function () {
