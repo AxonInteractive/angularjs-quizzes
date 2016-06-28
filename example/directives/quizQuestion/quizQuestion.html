@@ -1,6 +1,6 @@
 <div class="quiz-question" ng-class="{ 'incomplete': markAsIncomplete() }">
   <div class="question-text">
-    <h3>&nbsp;{{ question.number }}. {{ question.text }}</h3>
+    <h3 compile="htmlText"></h3>
     <ol class="sub-question-text">
       <li ng-if="question.isChoice()" ng-repeat="choice in question.choices" >
         <p>{{ choice }}</p>
@@ -12,7 +12,7 @@
     <ol class="mc-sub-question-text" ng-if="!question.isText()">
       <li ng-repeat="choice in question.choices track by $index">
         <div>
-          <label for="question-{{ question.number }}-{{ $index }}" >{{ question.getFormattedChoice( $index ) }}</label>
+          <label for="question-{{ question.number }}-{{ $index }}" compile="htmlChoices[ $index ]"></label>
         </div>
         <br />
         <input ng-model="question.answer" value="{{ $index }}" id="question-{{ question.number }}-{{ $index }}" type="radio" />

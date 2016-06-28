@@ -1,7 +1,9 @@
 <div class="quiz-results">
   <hr />
-  <div ng-repeat="question in source.questions">
-    <quiz-answer question="question"></quiz-answer>
-    <hr />
-  </div>
+  <ol class="quiz-answer-list">
+    <li class="quiz-answer-item" ng-repeat="question in source.questions" ng-class="{ 'correct': question.isCorrect, 'incorrect': !question.isCorrect }">
+      <quiz-answer question="question"></quiz-answer>
+      <hr />
+    </li>
+  </ol>
 </div>

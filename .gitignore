@@ -2,6 +2,10 @@
 node_modules
 bower_components
 
+# Example build folders (these need to be in the root for the views to be found)
+/directives
+/views
+
 # Sublime files
 *.sublime-*
 

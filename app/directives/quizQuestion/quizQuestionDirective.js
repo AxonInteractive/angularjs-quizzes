@@ -5,24 +5,33 @@
   angular
     .module( 'axon-angularjs-quizzes' )
     .directive( 'quizQuestion', [
-      function () {
+      '$sce',
+      function ( $sce ) {
 
         return {
 
           scope: {
-            'question': '=',
-            'highlight': '&'
+            'question': '='
           },
           restrict: 'AE',
           templateUrl: '/directives/quizQuestion/quizQuestion.html',
           link: function ( $scope, $elem, $attrs ) {
 
-            $scope.markAsIncomplete = function () {
-              var showIncomplete = ( typeof( $scope.highlight ) === 'function' )
-                ? $scope.highlight()
-                : false;
-              return !$scope.question.isAnswered() && showIncomplete;
-            };
+            $scope.htmlText = $sce.trustAsHtml( $scope.question.text );
+            $scope.htmlChoices =
+              $scope
+                .question
+                .choices
+                .map( function ( choice ) {
+                  return $sce.trustAsHtml( choice );
+                } );
+            $scope.htmlFormattedChoices =
+              $scope
+                .question
+                .choices
+                .map( function ( choice, i ) {
+                  return $sce.trustAsHtml( $scope.question.getFormattedChoice( i ) );
+                } );
 
          }
 

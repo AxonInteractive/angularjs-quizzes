@@ -1,4 +1,4 @@
-/*! axon-angularjs-quizzes - v0.0.5 - 2016-06-28 */
+/*! axon-angularjs-quizzes - v0.0.6 - 2016-06-28 */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // app.js /////////////////////////////////////////////////////////////////////////////////////////
@@ -42,14 +42,14 @@
         return {
 
           scope: {
-            'source': '=',
-            'highlight': '&'
+            'source': '='
           },
           restrict: 'AE',
           templateUrl: '/directives/quiz/quiz.html',
           link: function ( $scope, $elem, $attrs ) {
 
-            // Nothing to do here.
+
+            
           }
 
         };
@@ -77,8 +77,24 @@
           templateUrl: '/directives/quizAnswer/quizAnswer.html',
           link: function ( $scope, $elem, $attrs ) {
 
-            // Sanitize the commentary to produce working HTML.
-            $scope.sanitizedCommentary = $sce.trustAsHtml( $scope.question.commentary );
+            $scope.htmlText = $sce.trustAsHtml( $scope.question.text );
+            $scope.htmlAnswer = $sce.trustAsHtml( $scope.question.getFormattedAnswer() );
+            $scope.htmlCorrectAnswer = $sce.trustAsHtml( $scope.question.getFormattedCorrectAnswer() );
+            $scope.htmlCommentary = $sce.trustAsHtml( $scope.question.commentary );
+            $scope.htmlChoices =
+              $scope
+                .question
+                .choices
+                .map( function ( choice ) {
+                  return $sce.trustAsHtml( choice );
+                } );
+            $scope.htmlFormattedChoices =
+              $scope
+                .question
+                .choices
+                .map( function ( choice, i ) {
+                  return $sce.trustAsHtml( $scope.question.getFormattedChoice( i ) );
+                } );
 
           }
 
@@ -95,27 +111,33 @@
   angular
     .module( 'axon-angularjs-quizzes' )
     .directive( 'quizQuestion', [
-      function () {
+      '$sce',
+      function ( $sce ) {
 
         return {
 
           scope: {
-            'question': '=',
-            'highlight': '&'
+            'question': '='
           },
           restrict: 'AE',
           templateUrl: '/directives/quizQuestion/quizQuestion.html',
           link: function ( $scope, $elem, $attrs ) {
 
-            $scope.markAsIncomplete = function () {
-              var showIncomplete = ( typeof( $scope.highlight ) === 'function' )
-                ? $scope.highlight()
-                : false;
-              return !$scope.question.isAnswered() && showIncomplete;
-            };
-
-            console.log( $scope.highlight );
-            console.log( $scope.highlight() );
+            $scope.htmlText = $sce.trustAsHtml( $scope.question.text );
+            $scope.htmlChoices =
+              $scope
+                .question
+                .choices
+                .map( function ( choice ) {
+                  return $sce.trustAsHtml( choice );
+                } );
+            $scope.htmlFormattedChoices =
+              $scope
+                .question
+                .choices
+                .map( function ( choice, i ) {
+                  return $sce.trustAsHtml( $scope.question.getFormattedChoice( i ) );
+                } );
 
          }
 
@@ -431,8 +453,12 @@
           // is displayed in a literal form for results
           var TYPE_CHOICE = 'choice';
 
-          // True/False questions where the student picks an option from the choices array.
+          // Questions with one-word answers where the student picks an option from the choices array.
           var TYPE_CHOICE_LITERAL = 'choiceLiteral';
+
+          // Questions with multiple checkboxes and the user is expected to pick ALL correct answers
+          // without any incorrect selections or missing any selections to get the mark.
+          var TYPE_CHOICE_MULTI = 'choiceMulti';
 
           // Short-Answer questions and potentially numeric answers expected to be an exact string
           // match of the correct answer.
@@ -464,6 +490,12 @@
 
             // Whether or not the question is correct (according to the server).
             isCorrect: null,
+
+            // Whether or not this function should be hidden from the quiz.
+            isHidden: function ( quiz, question ) { return false; },
+
+            // Whether or not this function should be highlighted.
+            isHighlighted: function ( quiz, question ) { return false; },
 
             // The key/index of the question within the quiz questions array.
             key: null,
@@ -518,7 +550,7 @@
             if ( isChoiceLiteral() ) {
               return merged.choices[ parseInt( index ) ];
             }
-            else if ( isChoice() ) {
+            else if ( isChoice() || isChoiceMulti() ) {
               // 65 is ASCII for 'A'
               return String.fromCharCode( 65 + parseInt( index ) );
             }
@@ -569,6 +601,12 @@
 
           }
 
+          function isChoiceMulti () {
+
+            return ( merged.type === TYPE_CHOICE_MULTI );
+
+          }
+
           function isText () {
 
             return ( merged.type === TYPE_TEXT );
@@ -596,6 +634,7 @@
                 isAnswered: isAnswered,
                 isChoice: isChoice,
                 isChoiceLiteral: isChoiceLiteral,
+                isChoiceMulti: isChoiceMulti,
                 isText: isText
               }
             );

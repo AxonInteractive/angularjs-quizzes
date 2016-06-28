@@ -1,8 +1,8 @@
 <div class="quiz">
   <hr />
-  <ol class="all-question-container">
-    <li class="question-container" ng-repeat="question in source.questions">
-      <quiz-question question="question" highlight="highlight()"></quiz-question>
+  <ol class="quiz-question-list">
+    <li class="quiz-question-item" ng-repeat="question in source.questions" ng-class="{ 'incomplete-highlight': question.isHighlighted( source, question) }" ng-hide="question.isHidden( source, question )">
+      <quiz-question question="question"></quiz-question>
       <hr />
     </li>
   </ol>

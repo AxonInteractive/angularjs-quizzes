@@ -9,7 +9,7 @@
 
   // Add some routes.
   app.config( [
-    '$stateProvider', '$urlRouterProvider', 
+    '$stateProvider', '$urlRouterProvider',
     function ( $stateProvider, $urlRouterProvider ) {
 
       $urlRouterProvider.otherwise( '/' );
@@ -18,13 +18,13 @@
         name: 'root',
         url: '/',
         templateUrl: 'test.html',
-        controller: [ 
-          '$scope', '$testQuiz', '$testModules', 
+        controller: [
+          '$scope', '$testQuiz', '$testModules',
           function ( $scope, $testQuiz, $testModules ) {
 
             $scope.testVal = 'Test message to see if the basics are working!';
 
-            // Put the $testQuiz and $testModules factories on the $scope so we can pass them to 
+            // Put the $testQuiz and $testModules factories on the $scope so we can pass them to
             // the directives that need them.
             $scope.testQuiz = $testQuiz;
             $scope.testModules = $testModules;
@@ -38,27 +38,30 @@
             angular.merge( $scope.testQuiz, {
               questions: [
                 {
-                  commentary: 'Yay!',
+                  commentary: '<p>Yay!</p>',
                   correctAnswer: 0,
                   isCorrect: true
                 },
                 {
-                  commentary: 'Well that went badly...',
+                  commentary: '<h2>Well that went badly...</h2>',
                   correctAnswer: 1,
                   isCorrect: false
+                },
+                {
+                  commentary: '<h3>WORDS</h3>'
                 }
               ]
             } );
 
-            $scope.wasSubmitAttempted = function () {
-              return true;
+            $scope.highlight = function ( question ) {
+              return !question.isAnswered();
             };
 
-          } 
+          }
         ]
       } );
 
-    } 
+    }
 
   ] );
 
@@ -73,7 +76,7 @@
         .setDefault( 'size', 90 );
 
     }
-    
+
   ] );
 
   app.factory( '$testCompetencies', [
@@ -82,14 +85,14 @@
 
       return {
         "1": Competency( {
-          key: "1", 
-          name: "1", 
-          description: "Competency 1" 
+          key: "1",
+          name: "1",
+          description: "Competency 1"
         } ),
         "2": Competency( {
-          key: "2", 
-          name: "2", 
-          description: "Competency 2" 
+          key: "2",
+          name: "2",
+          description: "Competency 2"
         } )
       };
 
@@ -98,8 +101,12 @@
   ] );
 
   app.factory( '$testQuiz', [
-    'Quiz', 'Question', '$testCompetencies', 
+    'Quiz', 'Question', '$testCompetencies',
     function ( Quiz, Question, $testCompetencies ) {
+
+      function isHighlighted ( quiz, question ) {
+        return !question.isAnswered();
+      }
 
       return Quiz( {
         name: 'Test Quiz',
@@ -111,18 +118,33 @@
             number: 1,
             type: 'choiceLiteral',
             value: 1,
-            text: 'Test question 1.',
-            choices: [ 'True', 'False' ],
-            competency: $testCompetencies[ "1" ]
+            text: '<strong>Test question 1.</strong>',
+            choices: [ '<em>True</em>', '<strong>False</strong>' ],
+            competency: $testCompetencies[ "1" ],
+            isHighlighted: isHighlighted
           } ),
           Question( {
             key: 1,
             number: 2,
-            type: 'choiceLiteral',
+            type: 'choice',
             value: 1,
-            text: 'Test question 2.',
-            choices: [ 'True', 'False' ],
-            competency: $testCompetencies[ "2" ]
+            text: '<em>Test question 2.</em>',
+            choices: [ '<strong>True</strong>', '<em>False</em>' ],
+            competency: $testCompetencies[ "2" ],
+            isHighlighted: isHighlighted
+          } ),
+          Question( {
+            key: 2,
+            number: 3,
+            type: 'text',
+            value: 0,
+            text: '<h4>Test question 3.</h4>',
+            choices: [],
+            competency: $testCompetencies[ "2" ],
+            isHidden: function ( quiz ) {
+              return !quiz.questions[ 1 ].isAnswered();
+            },
+            isHighlighted: isHighlighted
           } )
         ]
       } );
@@ -131,7 +153,7 @@
   ] );
 
   app.factory( '$testModules', [
-    'Module', 'Page', 'Action', '$testCompetencies', 
+    'Module', 'Page', 'Action', '$testCompetencies',
     function ( Module, Page, Action, $testCompetencies ) {
 
       return [
@@ -139,8 +161,8 @@
           name: 'Module 1',
           number: 1,
           key: 'module-1',
-          competencies: [ 
-            $testCompetencies[ "1" ] 
+          competencies: [
+            $testCompetencies[ "1" ]
           ],
           pages: [
             Page( {
@@ -151,15 +173,15 @@
               transcriptUrl: '',
               actions: {
                 next: Action( {
-                  sref: '/', 
-                  label: 'Next' 
+                  sref: '/',
+                  label: 'Next'
                 } ),
                 prev: Action( {
-                  sref: '/', 
-                  label: 'Prev' 
+                  sref: '/',
+                  label: 'Prev'
                 } )
               }
-            } ), 
+            } ),
             Page( {
               number: 1,
               type: 'default',
@@ -168,12 +190,12 @@
               transcriptUrl: '',
               actions: {
                 next: Action( {
-                  sref: '/', 
-                  label: 'Next' 
+                  sref: '/',
+                  label: 'Next'
                 } ),
                 prev: Action( {
-                  sref: '/', 
-                  label: 'Prev' 
+                  sref: '/',
+                  label: 'Prev'
                 } )
               }
             } )
@@ -183,8 +205,8 @@
           name: 'Module 2',
           number: 2,
           key: 'module-2',
-          competencies: [ 
-            $testCompetencies[ "2" ] 
+          competencies: [
+            $testCompetencies[ "2" ]
           ],
           pages: [
             Page( {
@@ -195,15 +217,15 @@
               transcriptUrl: '',
               actions: {
                 next: Action( {
-                  sref: '/', 
-                  label: 'Next' 
+                  sref: '/',
+                  label: 'Next'
                 } ),
                 prev: Action( {
-                  sref: '/', 
-                  label: 'Prev' 
+                  sref: '/',
+                  label: 'Prev'
                 } )
               }
-            } ), 
+            } ),
             Page( {
               number: 1,
               type: 'default',
@@ -212,12 +234,12 @@
               transcriptUrl: '',
               actions: {
                 next: Action( {
-                  sref: '/', 
-                  label: 'Next' 
+                  sref: '/',
+                  label: 'Next'
                 } ),
                 prev: Action( {
-                  sref: '/', 
-                  label: 'Prev' 
+                  sref: '/',
+                  label: 'Prev'
                 } )
               }
             } )

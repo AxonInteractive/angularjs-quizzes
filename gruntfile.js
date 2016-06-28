@@ -25,7 +25,7 @@ module.exports = function ( grunt ) {
 
     'concat': {
       options: {
-        banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' + 
+        banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
           '<%= grunt.template.today("yyyy-mm-dd") %> */\n\n',
       },
       css: {
@@ -52,19 +52,19 @@ module.exports = function ( grunt ) {
         files: [ {
         cwd: 'bower_components/axon-angularjs-utilities/build',
         expand: true,
-        src: [ '**/*.html' ], 
-        dest: 'example/'
+        src: [ '**/*.html' ],
+        dest: './'
         }, {
         cwd: 'app/',
         expand: true,
-        src: [ '**/*.html' ], 
-        dest: 'example/'
+        src: [ '**/*.html' ],
+        dest: './'
         } ]
       },
       html: {
         cwd: 'app/',
         expand: true,
-        src: [ '**/*.html' ], 
+        src: [ '**/*.html' ],
         dest: 'build/'
       }
     },
@@ -85,7 +85,7 @@ module.exports = function ( grunt ) {
 
     'uglify': {
       options: {
-        banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' + 
+        banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
           '<%= grunt.template.today("yyyy-mm-dd") %> */\n\n',
         report: 'min',
         mangle: false

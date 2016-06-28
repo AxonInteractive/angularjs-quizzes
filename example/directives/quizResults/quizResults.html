@@ -1,7 +1,9 @@
 <div class="quiz-results">
   <hr />
-  <div ng-repeat="question in source.questions">
-    <quiz-answer question="question"></quiz-answer>
-    <hr />
-  </div>
+  <ol>
+    <li ng-repeat="question in source.questions">
+      <quiz-answer question="question"></quiz-answer>
+      <hr />
+    </li>
+  </ol>
 </div>

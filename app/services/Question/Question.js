@@ -18,8 +18,12 @@
           // is displayed in a literal form for results
           var TYPE_CHOICE = 'choice';
 
-          // True/False questions where the student picks an option from the choices array.
+          // Questions with one-word answers where the student picks an option from the choices array.
           var TYPE_CHOICE_LITERAL = 'choiceLiteral';
+
+          // Questions with multiple checkboxes and the user is expected to pick ALL correct answers
+          // without any incorrect selections or missing any selections to get the mark.
+          var TYPE_CHOICE_MULTI = 'choiceMulti';
 
           // Short-Answer questions and potentially numeric answers expected to be an exact string
           // match of the correct answer.
@@ -51,6 +55,12 @@
 
             // Whether or not the question is correct (according to the server).
             isCorrect: null,
+
+            // Whether or not this function should be hidden from the quiz.
+            isHidden: function ( quiz, question ) { return false; },
+
+            // Whether or not this function should be highlighted.
+            isHighlighted: function ( quiz, question ) { return false; },
 
             // The key/index of the question within the quiz questions array.
             key: null,
@@ -105,7 +115,7 @@
             if ( isChoiceLiteral() ) {
               return merged.choices[ parseInt( index ) ];
             }
-            else if ( isChoice() ) {
+            else if ( isChoice() || isChoiceMulti() ) {
               // 65 is ASCII for 'A'
               return String.fromCharCode( 65 + parseInt( index ) );
             }
@@ -156,6 +166,12 @@
 
           }
 
+          function isChoiceMulti () {
+
+            return ( merged.type === TYPE_CHOICE_MULTI );
+
+          }
+
           function isText () {
 
             return ( merged.type === TYPE_TEXT );
@@ -183,6 +199,7 @@
                 isAnswered: isAnswered,
                 isChoice: isChoice,
                 isChoiceLiteral: isChoiceLiteral,
+                isChoiceMulti: isChoiceMulti,
                 isText: isText
               }
             );
