@@ -24,9 +24,6 @@
               return !$scope.question.isAnswered() && showIncomplete;
             };
 
-            console.log( $scope.highlight );
-            console.log( $scope.highlight() );
-
          }
 
         };
